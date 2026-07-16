@@ -1,0 +1,9 @@
+{
+  "redirects": [
+    {
+      "source": "/",
+      "destination": "/pecas/comparador-publico/07-comparador-premium.html",
+      "permanent": false
+    }
+  ]
+}
