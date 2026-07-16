@@ -220,10 +220,15 @@
   @media(max-width:600px){
     /* o chip flutuante vira só um círculo sem rótulo e sobrepõe os preços dos cards */
     .float-produto{display:none}
+    /* ritmo vertical: no mobile 80px de padding deixava um vão morto grande antes do rodapé */
+    .comp{padding-top:var(--s12);padding-bottom:var(--s12)}
+    .sec-head{margin-bottom:var(--s6)}
+    .grid{margin-top:var(--s6)}
+    /* aproxima o disclaimer e o rodapé do conteúdo, sem o buraco branco */
+    .comp-foot{flex-direction:column;text-align:center;gap:var(--s3);margin-top:var(--s6)}
+    .foot-in{padding:var(--s8) var(--s5)}
     /* links do rodapé em coluna centralizada, sem quebra 3+1 */
     .foot-links{flex-direction:column;gap:var(--s2)}
-    /* ícone acima do texto, sem descolar quando a frase quebra em 2 linhas */
-    .comp-foot{flex-direction:column;text-align:center;gap:var(--s3)}
   }
   [hidden]{display:none!important}
 </style>
