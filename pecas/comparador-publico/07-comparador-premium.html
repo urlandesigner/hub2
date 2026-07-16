@@ -170,8 +170,8 @@
   .div{border:0;border-top:1px solid var(--n-200);margin:var(--s3) 0}
   .total{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:var(--s5)}
   .total .l{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--text-3)}
+  .total .l.aprazo{font-size:14px;font-weight:600;letter-spacing:normal;text-transform:none}
   .total .v{font-family:var(--display);font-weight:600;font-size:30px;line-height:38px;text-align:left}
-  .total .v small{display:block;font-family:var(--body);font-size:12px;font-weight:600;color:var(--text-3);line-height:1.4}
   .btn-buy{width:100%;display:inline-flex;justify-content:center;align-items:center;gap:var(--s2);font-family:var(--body);
     font-size:16px;font-weight:700;color:#fff;background:var(--btn);border:0;border-radius:var(--rf);padding:var(--s4) var(--s5);
     min-height:48px;cursor:pointer;transition:transform var(--dpress) var(--ease),background-color var(--dui) var(--ease)}
@@ -383,7 +383,8 @@ function destaque(c, lista){
 function card(c, best, i){
   const freteL = !cep ? '<dd class="pend" aria-label="ainda não calculado">—</dd>' : (c.frete===0 ? '<dd class="gratis">Grátis</dd>' : `<dd>${fmt(c.frete)}</dd>`);
   const prazoL = !cep ? '<dd class="pend" aria-label="ainda não calculado">—</dd>' : `<dd>${c.prazo}</dd>`;
-  const totalV = !cep ? `<small>a partir de</small> ${fmt(c.preco)}` : fmt(c.preco+c.frete);
+  const totalL = !cep ? 'A partir de' : 'Total';
+  const totalV = !cep ? fmt(c.preco) : fmt(c.preco+c.frete);
   const d = best ? null : destaque(c, window._ord);
   const body = `
     <div class="destaque-slot">${d?`<span class="chip-d">${d}</span>`:''}</div>
@@ -395,7 +396,7 @@ function card(c, best, i){
       <div class="row"><dt>Parcelamento</dt><dd>${c.parc}</dd></div>
     </dl>
     <hr class="div">
-    <div class="total"><span class="l">Total</span><span class="v">${totalV}</span></div>
+    <div class="total"><span class="l${!cep?' aprazo':''}">${totalL}</span><span class="v">${totalV}</span></div>
     <a class="btn-buy" href="${c.link}" data-canal="${c.id}">Comprar ${c.prep} ${c.canal} <span aria-hidden="true">→</span></a>`;
   return `<article class="card ${best?'best':''}" data-canal="${c.id}">
     ${best
