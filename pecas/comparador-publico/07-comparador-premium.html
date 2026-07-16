@@ -225,7 +225,9 @@
     .sec-head{margin-bottom:var(--s6)}
     .grid{margin-top:var(--s6)}
     /* aproxima o disclaimer e o rodapé do conteúdo, sem o buraco branco */
-    .comp-foot{flex-direction:column;text-align:center;gap:var(--s3);margin-top:var(--s6)}
+    /* ícone inline com o texto (não empilhado); a frase quebra naturalmente mas o escudo fica colado nela */
+    .comp-foot{display:block;text-align:center;margin-top:var(--s6)}
+    .comp-foot svg{display:inline;vertical-align:middle;margin-right:var(--s2)}
     .foot-in{padding:var(--s8) var(--s5)}
     /* links do rodapé em coluna centralizada, sem quebra 3+1 */
     .foot-links{flex-direction:column;gap:var(--s2)}
