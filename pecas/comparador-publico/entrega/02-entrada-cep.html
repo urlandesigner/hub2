@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Peça 02 — Entrada de CEP + frete · comparador-publico</title>
+<style>
+  /* GUARDRAIL: todos os valores são tokens do KZ Design System. Nada inventado. */
+  :root{
+    --neutral-50:#FFFFFF; --neutral-100:#FAF9FC; --neutral-200:#ECEBF0; --neutral-300:#E2E1E5;
+    --neutral-400:#C9C8CC; --neutral-500:#B0AFB2; --neutral-600:#6C6B6E; --neutral-700:#505052; --neutral-900:#1E1E1F;
+    --red-50:#FEF1F1; --red-500:#EA5757; --red-600:#CF3030;
+    --green-600:#50AE47; --green-100:#E6F6E5; --green-700:#33922A; --green-200:#D1EECE;
+    --bg-primary:#ECEBF0; --surface-primary:#FFFFFF; --surface-secondary:#FAF9FC; --surface-tertiary:#ECEBF0;
+    --text-primary:#1E1E1F; --text-secondary:#505052; --text-tertiary:#6C6B6E;
+    --border-primary:#E2E1E5; --border-input:#B0AFB2; --border-input-selected:#1E1E1F; --border-input-error:#CF3030;
+    --input-placeholder:#6C6B6E; --input-text:#1E1E1F;
+    --btn-enabled:#1E1E1F; --btn-hover:#505052; --btn-text:#FFFFFF; --btn-disabled:#E2E1E5; --btn-text-disabled:#6C6B6E;
+    --text-negative:#EA5757;
+    --sp-100:4px; --sp-150:6px; --sp-200:8px; --sp-300:12px; --sp-400:16px; --sp-500:20px; --sp-600:24px; --sp-800:32px;
+    --r-200:8px; --r-300:12px; --r-400:16px; --r-full:9999px;
+    --b-25:1px; --b-50:2px; --shadow-sm:0 0 8px rgba(5,5,5,.10);
+    --font-title:'Syne', system-ui, sans-serif;
+    --font-body:'Nunito Sans', system-ui, sans-serif;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{font-family:var(--font-body); background:var(--bg-primary); color:var(--text-primary);
+    padding:var(--sp-600) var(--sp-400) 80px; -webkit-font-smoothing:antialiased;}
+  .page-title{font-family:var(--font-title); font-size:24px; line-height:32px; font-weight:600; margin-bottom:var(--sp-200);}
+  .page-sub{font-size:14px; line-height:20px; color:var(--text-secondary); margin-bottom:var(--sp-600); max-width:560px;}
+  .stage{display:flex; flex-wrap:wrap; gap:var(--sp-600); align-items:flex-start;}
+  .col{flex:1 1 360px; max-width:400px;}
+  .col > h2{font-family:var(--font-title); font-size:16px; line-height:22px; font-weight:600; margin-bottom:var(--sp-100);}
+  .col > .trade{font-size:13px; line-height:18px; color:var(--text-tertiary); margin-bottom:var(--sp-400); min-height:54px;}
+  .state-label{font-size:11px; line-height:16px; letter-spacing:.06em; text-transform:uppercase;
+    color:var(--text-tertiary); font-weight:700; margin:var(--sp-400) 0 var(--sp-150);}
+  .device{max-width:390px; background:var(--bg-primary); border:var(--b-25) solid var(--border-primary);
+    border-radius:var(--r-400); padding:var(--sp-400);}
+
+  /* ————— Elementos comuns ————— */
+  label.field-label{display:block; font-size:14px; line-height:18px; font-weight:600; color:var(--text-secondary); margin-bottom:var(--sp-150);}
+  .input{width:100%; height:48px; padding:0 var(--sp-400); border-radius:var(--r-200);
+    border:var(--b-25) solid var(--border-input); background:var(--surface-primary);
+    font-family:var(--font-body); font-size:16px; color:var(--input-text);}
+  .input::placeholder{color:var(--input-placeholder);}
+  .input.filled{border-color:var(--border-input-selected);}
+  .input.error{border-color:var(--border-input-error); border-width:var(--b-50);}
+  .cta{border:0; cursor:pointer; background:var(--btn-enabled); color:var(--btn-text);
+    font-family:var(--font-body); font-weight:700; font-size:16px; line-height:20px;
+    padding:0 var(--sp-500); height:48px; border-radius:var(--r-200); flex:none;}
+  .cta:disabled{background:var(--btn-disabled); color:var(--btn-text-disabled); cursor:not-allowed;}
+  .err-msg{display:flex; align-items:center; gap:var(--sp-150); color:var(--text-negative);
+    font-size:13px; line-height:18px; margin-top:var(--sp-150);}
+  .link{color:var(--text-primary); font-weight:700; text-decoration:underline; text-underline-offset:2px; cursor:pointer; font-size:14px;
+    min-height:44px; display:inline-flex; align-items:center; padding:0 var(--sp-100);}
+
+  /* ————— Direção 1: CEP como portão ————— */
+  .gate{background:var(--surface-primary); border:var(--b-25) solid var(--border-primary);
+    border-radius:var(--r-300); padding:var(--sp-600); box-shadow:var(--shadow-sm); text-align:center;}
+  .gate .pin{width:44px; height:44px; border-radius:var(--r-full); background:var(--surface-tertiary);
+    display:inline-flex; align-items:center; justify-content:center; font-size:22px; margin-bottom:var(--sp-300);}
+  .gate h3{font-family:var(--font-title); font-size:18px; line-height:24px; font-weight:600; margin-bottom:var(--sp-150);}
+  .gate p{font-size:14px; line-height:20px; color:var(--text-secondary); margin-bottom:var(--sp-400);}
+  .gate .input{text-align:center; margin-bottom:var(--sp-300);}
+  .gate .cta{width:100%;}
+
+  /* ————— Direção 2: barra progressiva ————— */
+  .bar{background:var(--surface-primary); border:var(--b-25) solid var(--border-primary);
+    border-radius:var(--r-300); padding:var(--sp-300) var(--sp-400); box-shadow:var(--shadow-sm);}
+  .bar-row{display:flex; align-items:center; gap:var(--sp-300);}
+  .bar .pin{font-size:18px; flex:none;}
+  .bar .grow{flex:1; min-width:0;}
+  .bar .input{height:44px; font-size:15px;}
+  .bar .cta{height:44px; min-width:44px; font-size:14px; padding:0 var(--sp-400);}
+  .bar .lead{font-size:12px; line-height:16px; color:var(--text-tertiary);}
+  .bar .dest{font-size:15px; line-height:20px; font-weight:700; color:var(--text-primary);}
+  .bar-confirm{display:flex; align-items:center; gap:var(--sp-300);}
+  .bar-confirm .grow{flex:1;}
+  .check{color:var(--green-700); flex:none; font-size:18px;}
+  /* mini preview do efeito no card (só ilustra o vínculo com a peça 01) */
+  .hint{font-size:12px; line-height:16px; color:var(--text-tertiary); margin-top:var(--sp-300); padding-top:var(--sp-300); border-top:var(--b-25) dashed var(--border-primary);}
+</style>
+</head>
+<body>
+  <div class="page-title">Peça 02 — Entrada de CEP + cálculo de frete</div>
+  <div class="page-sub">O CEP é o que destrava o frete (e, com ele, o "total com frete" e a ordenação por menor custo-benefício do card). Duas direções: portão vs. barra progressiva. Estados: vazio · confirmado · erro. CEP transitório (sem armazenamento — restrição da spec). Tokens KZ.</div>
+
+  <div class="stage">
+
+    <!-- DIREÇÃO 1 — PORTÃO -->
+    <div class="col">
+      <h2>Direção 1 — CEP como portão</h2>
+      <div class="trade">Pede o CEP antes de mostrar a comparação. Garante ordenação por total real desde o 1º card. Trade-off: adiciona 1 passo de fricção antes de ver qualquer preço (tensiona a restrição "sem fricção").</div>
+
+      <div class="state-label">Vazio (entrada)</div>
+      <div class="device">
+        <div class="gate">
+          <span class="pin">📍</span>
+          <h3>Compare o total em cada canal</h3>
+          <p>Informe seu CEP para calcular o frete e ver o total em Shopee, TikTok e Ybera.com.</p>
+          <input class="input" inputmode="numeric" placeholder="00000-000" aria-label="CEP">
+          <button class="cta" disabled>Comparar preços</button>
+        </div>
+      </div>
+
+      <div class="state-label">Erro (CEP inválido)</div>
+      <div class="device">
+        <div class="gate">
+          <span class="pin">📍</span>
+          <h3>Compare o total em cada canal</h3>
+          <p>Informe seu CEP para calcular o frete e ver o total em Shopee, TikTok e Ybera.com.</p>
+          <input class="input error" value="00000-000" aria-label="CEP" aria-invalid="true">
+          <div class="err-msg" style="justify-content:center; margin-top:calc(var(--sp-150)*-1 + 0px); margin-bottom:var(--sp-300);">⚠ CEP não encontrado. Confira os números.</div>
+          <button class="cta" disabled>Comparar preços</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- DIREÇÃO 2 — BARRA PROGRESSIVA -->
+    <div class="col">
+      <h2>Direção 2 — Barra progressiva</h2>
+      <div class="trade">Barra fina no topo do comparador. O cliente já vê os cards (preço) e o frete/total completam quando o CEP chega. Trade-off: até informar o CEP, a ordenação por total ainda não é a final.</div>
+
+      <div class="state-label">Vazio (frete pendente)</div>
+      <div class="device">
+        <div class="bar">
+          <div class="bar-row">
+            <span class="pin">📍</span>
+            <input class="input grow" inputmode="numeric" placeholder="Digite seu CEP p/ ver o frete" aria-label="CEP">
+            <button class="cta" disabled>OK</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="state-label">Confirmado (frete calculado)</div>
+      <div class="device">
+        <div class="bar">
+          <div class="bar-confirm">
+            <span class="check">✓</span>
+            <div class="grow">
+              <div class="lead">Entregar em</div>
+              <div class="dest">01310-100 · São Paulo, SP</div>
+            </div>
+            <span class="link">Alterar</span>
+          </div>
+          <div class="hint">Frete e total atualizados nos 3 canais abaixo.</div>
+        </div>
+      </div>
+
+      <div class="state-label">Erro (CEP inválido)</div>
+      <div class="device">
+        <div class="bar">
+          <div class="bar-row">
+            <span class="pin">📍</span>
+            <input class="input grow error" value="00000-000" aria-label="CEP" aria-invalid="true">
+            <button class="cta" disabled>OK</button>
+          </div>
+          <div class="err-msg">⚠ CEP não encontrado. Confira os números.</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</body>
+</html>

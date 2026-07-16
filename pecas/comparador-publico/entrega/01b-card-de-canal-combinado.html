@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Peça 01b — Card de canal (A+C combinado) · comparador-publico</title>
+<style>
+  /* GUARDRAIL: todos os valores são tokens do KZ Design System. Nada inventado.
+     Exceção deliberada: logo de marca do canal (imagem em assets/) — decisão do designer. */
+  :root{
+    --neutral-50:#FFFFFF; --neutral-100:#FAF9FC; --neutral-200:#ECEBF0; --neutral-300:#E2E1E5;
+    --neutral-400:#C9C8CC; --neutral-500:#B0AFB2; --neutral-600:#6C6B6E; --neutral-700:#505052; --neutral-900:#1E1E1F;
+    --green-600:#50AE47; --green-100:#E6F6E5; --green-700:#33922A; --green-800:#2B6A25; --green-200:#D1EECE;
+    --bg-primary:#ECEBF0; --surface-primary:#FFFFFF; --surface-tertiary:#ECEBF0;
+    --text-primary:#1E1E1F; --text-secondary:#505052; --text-tertiary:#6C6B6E;
+    --border-primary:#E2E1E5;
+    --btn-enabled:#1E1E1F; --btn-text:#FFFFFF;
+    --sp-100:4px; --sp-150:6px; --sp-200:8px; --sp-300:12px; --sp-400:16px; --sp-500:20px; --sp-600:24px;
+    --r-200:8px; --r-300:12px; --r-400:16px; --r-full:9999px;
+    --b-25:1px; --shadow-sm:0 0 8px rgba(5,5,5,.10);
+    --font-title:'Syne', system-ui, sans-serif;
+    --font-body:'Nunito Sans', system-ui, sans-serif;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{font-family:var(--font-body); background:var(--bg-primary); color:var(--text-primary);
+    padding:var(--sp-600) var(--sp-400) 80px; -webkit-font-smoothing:antialiased;}
+  .page-title{font-family:var(--font-title); font-size:24px; line-height:32px; font-weight:600; margin-bottom:var(--sp-200);}
+  .page-sub{font-size:14px; line-height:20px; color:var(--text-secondary); margin-bottom:var(--sp-600); max-width:520px;}
+  .device{max-width:390px; margin:0 auto; background:var(--bg-primary);
+    border:var(--b-25) solid var(--border-primary); border-radius:var(--r-400); padding:var(--sp-400);}
+
+  /* logo de canal com fallback no monograma neutro (tokens KZ) */
+  .chan{position:relative; width:40px; height:40px; border-radius:var(--r-200); flex:none;
+    background:var(--surface-primary); border:var(--b-25) solid var(--border-primary);
+    padding:var(--sp-150); display:inline-flex; align-items:center; justify-content:center; overflow:hidden;}
+  .chan img{width:100%; height:100%; object-fit:contain; display:block;}
+  .chan .mono{font-family:var(--font-title); font-weight:600; font-size:15px; color:var(--text-primary);}
+
+  /* ————— Direção A+C: linha compacta + total dominante ————— */
+  .card{background:var(--surface-primary); border:var(--b-25) solid var(--border-primary);
+    border-radius:var(--r-300); padding:var(--sp-400); box-shadow:var(--shadow-sm); margin-bottom:var(--sp-300);}
+  .card:last-child{margin-bottom:0;}
+  .card.best{border-color:var(--green-600);
+    background:linear-gradient(180deg,var(--green-100) 0%, var(--surface-primary) 44%);}
+  .head{display:flex; align-items:center; gap:var(--sp-300); margin-bottom:var(--sp-300);}
+  .chan-name{font-weight:700; font-size:16px; line-height:20px; flex:1;}
+  .badge-best{display:inline-flex; align-items:center; gap:var(--sp-100);
+    background:var(--green-100); color:var(--green-800); border:var(--b-25) solid var(--green-200);
+    font-size:12px; font-weight:700; line-height:16px; padding:2px var(--sp-200); border-radius:var(--r-full);}
+  .body{display:flex; align-items:flex-end; justify-content:space-between; gap:var(--sp-300);}
+  .total-label{font-size:12px; line-height:16px; color:var(--text-tertiary); text-transform:uppercase; letter-spacing:.04em;}
+  .total{font-family:var(--font-title); font-weight:700; font-size:28px; line-height:32px; margin:2px 0 var(--sp-100);}
+  .break{font-size:13px; line-height:18px; color:var(--text-tertiary);}
+  .cta{border:0; cursor:pointer; background:var(--btn-enabled); color:var(--btn-text);
+    font-family:var(--font-body); font-weight:700; font-size:15px; line-height:20px;
+    padding:var(--sp-300) var(--sp-500); border-radius:var(--r-200); flex:none; align-self:center;}
+</style>
+</head>
+<body>
+  <div class="page-title">Peça 01b — Card de canal · direção A+C combinada</div>
+  <div class="page-sub">Base compacta da Direção A com a hierarquia de total da Direção C. Logo de canal via <code>assets/</code> (fallback = monograma neutro enquanto o arquivo não existe). Resto todo em tokens KZ. Ordenado por menor custo-benefício.</div>
+
+  <div class="device">
+    <div class="card best">
+      <div class="head">
+        <span class="chan"><img src="assets/Shopee.svg" alt="Shopee" onerror="this.style.display='none';this.insertAdjacentHTML('afterend','<span class=\'mono\'>Sh</span>')"></span>
+        <span class="chan-name">Shopee</span>
+        <span class="badge-best">✓ Melhor custo</span>
+      </div>
+      <div class="body">
+        <div>
+          <div class="total-label">Total com frete</div>
+          <div class="total">R$ 199,80</div>
+          <div class="break">R$ 179,90 + frete R$ 19,90</div>
+        </div>
+        <button class="cta">Comprar</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="head">
+        <span class="chan"><img src="assets/tiktok.svg" alt="TikTok Shop" onerror="this.style.display='none';this.insertAdjacentHTML('afterend','<span class=\'mono\'>Tt</span>')"></span>
+        <span class="chan-name">TikTok Shop</span>
+      </div>
+      <div class="body">
+        <div>
+          <div class="total-label">Total com frete</div>
+          <div class="total">R$ 206,90</div>
+          <div class="break">R$ 184,90 + frete R$ 22,00</div>
+        </div>
+        <button class="cta">Comprar</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="head">
+        <span class="chan"><img src="assets/ybera.svg" alt="Ybera.com" onerror="this.style.display='none';this.insertAdjacentHTML('afterend','<span class=\'mono\'>Yb</span>')"></span>
+        <span class="chan-name">Ybera.com</span>
+      </div>
+      <div class="body">
+        <div>
+          <div class="total-label">Total com frete</div>
+          <div class="total">R$ 214,80</div>
+          <div class="break">R$ 189,90 + frete R$ 24,90</div>
+        </div>
+        <button class="cta">Comprar</button>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,210 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Peça 01 — Card de canal · comparador-publico</title>
+<style>
+  /* ————————————————————————————————————————————————
+     GUARDRAIL: todos os valores abaixo são tokens do KZ Design System
+     (design-system/tokens.json). Nada inventado.
+     ———————————————————————————————————————————————— */
+  :root{
+    /* cor — foundation kz + theme */
+    --neutral-50:#FFFFFF; --neutral-100:#FAF9FC; --neutral-200:#ECEBF0;
+    --neutral-300:#E2E1E5; --neutral-400:#C9C8CC; --neutral-500:#B0AFB2;
+    --neutral-600:#6C6B6E; --neutral-700:#505052; --neutral-900:#1E1E1F;
+    --club-500:#ED1A57; --club-600:#C70F43; --club-50:#FEF0F4;
+    --green-600:#50AE47; --green-100:#E6F6E5; --green-700:#33922A; --green-200:#D1EECE;
+    --bg-primary:#ECEBF0;        /* color-theme/background/primary */
+    --surface-primary:#FFFFFF;   /* color-theme/surface/primary */
+    --surface-tertiary:#ECEBF0;  /* color-theme/surface/tertiary */
+    --text-primary:#1E1E1F;      /* color-theme/text/primary-dark */
+    --text-secondary:#505052;    /* color-theme/text/secondary-dark */
+    --text-tertiary:#6C6B6E;     /* color-theme/text/tertiary-dark */
+    --border-primary:#E2E1E5;    /* color-theme/border/primary */
+    --btn-enabled:#1E1E1F;       /* color-theme/surface/button/enabled */
+    --btn-text:#FFFFFF;          /* color-theme/text/button/default */
+    /* espaço */
+    --sp-100:4px; --sp-150:6px; --sp-200:8px; --sp-300:12px; --sp-400:16px;
+    --sp-500:20px; --sp-600:24px;
+    /* raio */
+    --r-200:8px; --r-300:12px; --r-400:16px; --r-full:9999px;
+    /* borda */
+    --b-25:1px;
+    /* sombra — $shadow-sm */
+    --shadow-sm:0 0 8px rgba(5,5,5,.10);
+    /* tipografia */
+    --font-title:'Syne', system-ui, sans-serif;      /* títulos */
+    --font-body:'Nunito Sans', system-ui, sans-serif;/* texto/labels */
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{
+    font-family:var(--font-body);
+    background:var(--bg-primary);
+    color:var(--text-primary);
+    padding:var(--sp-600) var(--sp-400) var(--sp-2000,80px);
+    -webkit-font-smoothing:antialiased;
+  }
+  .page-title{font-family:var(--font-title); font-size:24px; line-height:32px; font-weight:600; margin-bottom:var(--sp-200);}
+  .page-sub{font-size:14px; line-height:20px; color:var(--text-secondary); margin-bottom:var(--sp-600); max-width:560px;}
+  .stage{display:flex; flex-wrap:wrap; gap:var(--sp-600); align-items:flex-start;}
+  .col{flex:1 1 340px; max-width:390px;}
+  .col > h2{font-family:var(--font-title); font-size:16px; line-height:22px; font-weight:600; margin-bottom:var(--sp-100);}
+  .col > .trade{font-size:13px; line-height:18px; color:var(--text-tertiary); margin-bottom:var(--sp-400); min-height:54px;}
+  /* fundo "device" para simular o comparador */
+  .device{background:var(--bg-primary); border:var(--b-25) solid var(--border-primary); border-radius:var(--r-400); padding:var(--sp-400);}
+
+  /* monograma neutro do canal (marca de canal ainda não é token — ver rastro) */
+  .chan{display:inline-flex; align-items:center; justify-content:center;
+    width:36px; height:36px; border-radius:var(--r-200);
+    background:var(--surface-tertiary); color:var(--text-primary);
+    font-family:var(--font-title); font-weight:600; font-size:14px; flex:none;}
+  .chan-name{font-weight:700; font-size:16px; line-height:20px;}
+  .muted{color:var(--text-secondary);}
+  .tiny{color:var(--text-tertiary); font-size:13px; line-height:18px;}
+
+  .badge-best{display:inline-flex; align-items:center; gap:var(--sp-100);
+    background:var(--green-100); color:var(--green-700);
+    border:var(--b-25) solid var(--green-200);
+    font-size:12px; font-weight:700; line-height:16px;
+    padding:2px var(--sp-200); border-radius:var(--r-full);}
+
+  .cta{width:100%; border:0; cursor:pointer;
+    background:var(--btn-enabled); color:var(--btn-text);
+    font-family:var(--font-body); font-weight:700; font-size:16px; line-height:20px;
+    padding:var(--sp-300) var(--sp-400); border-radius:var(--r-200);}
+  .cta.small{width:auto; padding:var(--sp-200) var(--sp-400); font-size:14px;}
+
+  /* ————— Direção A: linha compacta ————— */
+  .a-card{display:flex; align-items:center; gap:var(--sp-300);
+    background:var(--surface-primary); border:var(--b-25) solid var(--border-primary);
+    border-radius:var(--r-300); padding:var(--sp-300); box-shadow:var(--shadow-sm); margin-bottom:var(--sp-300);}
+  .a-card.best{border-color:var(--green-600);}
+  .a-info{flex:1 1 auto; min-width:0;}
+  .a-top{display:flex; align-items:center; gap:var(--sp-200); margin-bottom:2px;}
+  .a-total{font-family:var(--font-title); font-weight:600; font-size:18px; line-height:24px;}
+  .a-break{font-size:13px; line-height:18px; color:var(--text-tertiary);}
+
+  /* ————— Direção B: vertical, breakdown explícito ————— */
+  .b-card{background:var(--surface-primary); border:var(--b-25) solid var(--border-primary);
+    border-radius:var(--r-300); padding:var(--sp-400); box-shadow:var(--shadow-sm); margin-bottom:var(--sp-300);}
+  .b-card.best{border-color:var(--green-600);}
+  .b-head{display:flex; align-items:center; gap:var(--sp-300); margin-bottom:var(--sp-300);}
+  .b-head .chan-name{flex:1;}
+  .b-row{display:flex; justify-content:space-between; font-size:14px; line-height:20px; color:var(--text-secondary); padding:var(--sp-100) 0;}
+  .b-row.total{border-top:var(--b-25) solid var(--border-primary); margin-top:var(--sp-100); padding-top:var(--sp-300);
+    color:var(--text-primary);}
+  .b-row.total .v{font-family:var(--font-title); font-weight:600; font-size:24px; line-height:32px;}
+  .b-row .v{font-weight:700; color:var(--text-primary);}
+  .b-card .cta{margin-top:var(--sp-400);}
+
+  /* ————— Direção C: total dominante (recibo) ————— */
+  .c-card{background:var(--surface-primary); border:var(--b-25) solid var(--border-primary);
+    border-radius:var(--r-400); padding:var(--sp-400); box-shadow:var(--shadow-sm); margin-bottom:var(--sp-300);}
+  .c-card.best{border-color:var(--green-600); background:linear-gradient(180deg,var(--green-100) 0%, var(--surface-primary) 40%);}
+  .c-head{display:flex; align-items:center; gap:var(--sp-300); margin-bottom:var(--sp-300);}
+  .c-head .chan-name{flex:1;}
+  .c-total-label{font-size:13px; line-height:18px; color:var(--text-tertiary); text-transform:uppercase; letter-spacing:.04em;}
+  .c-total{font-family:var(--font-title); font-weight:700; font-size:32px; line-height:40px; margin:2px 0 var(--sp-100);}
+  .c-break{font-size:13px; line-height:18px; color:var(--text-tertiary); margin-bottom:var(--sp-400);}
+  .c-flex{display:flex; align-items:flex-end; justify-content:space-between; gap:var(--sp-300);}
+  .c-flex .cta{width:auto; align-self:stretch;}
+</style>
+</head>
+<body>
+  <div class="page-title">Peça 01 — Card de canal</div>
+  <div class="page-sub">3 direções da mesma peça-núcleo, no viewport mobile (~390px). Mesmo produto, 3 canais, ordenados por menor custo-benefício (total = preço + frete). Canal representado de forma neutra — cor/logo de marca de canal ainda não é token do DS (ver rastro da spec). Escolha uma direção olhando; o portão de qualidade roda depois.</div>
+
+  <div class="stage">
+
+    <!-- DIREÇÃO A -->
+    <div class="col">
+      <h2>Direção A — Linha compacta</h2>
+      <div class="trade">Densidade alta: cabe mais canal por tela, comparação rápida na vertical. Trade-off: breakdown de preço/frete fica pequeno e o CTA disputa espaço na linha.</div>
+      <div class="device">
+        <div class="a-card best">
+          <span class="chan">Sh</span>
+          <div class="a-info">
+            <div class="a-top"><span class="chan-name">Shopee</span><span class="badge-best">✓ Melhor custo</span></div>
+            <div class="a-total">R$ 199,80</div>
+            <div class="a-break">R$ 179,90 + frete R$ 19,90</div>
+          </div>
+          <button class="cta small">Comprar</button>
+        </div>
+        <div class="a-card">
+          <span class="chan">Tt</span>
+          <div class="a-info">
+            <div class="a-top"><span class="chan-name">TikTok Shop</span></div>
+            <div class="a-total">R$ 206,90</div>
+            <div class="a-break">R$ 184,90 + frete R$ 22,00</div>
+          </div>
+          <button class="cta small">Comprar</button>
+        </div>
+        <div class="a-card">
+          <span class="chan">Wk</span>
+          <div class="a-info">
+            <div class="a-top"><span class="chan-name">Wake</span></div>
+            <div class="a-total">R$ 214,80</div>
+            <div class="a-break">R$ 189,90 + frete R$ 24,90</div>
+          </div>
+          <button class="cta small">Comprar</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- DIREÇÃO B -->
+    <div class="col">
+      <h2>Direção B — Vertical, breakdown explícito</h2>
+      <div class="trade">Preço, frete e total em linhas separadas (estilo recibo): transparência total do cálculo, CTA full-width. Trade-off: cada card é alto, cabem menos por viewport — mais scroll.</div>
+      <div class="device">
+        <div class="b-card best">
+          <div class="b-head"><span class="chan">Sh</span><span class="chan-name">Shopee</span><span class="badge-best">✓ Melhor custo</span></div>
+          <div class="b-row"><span>Preço</span><span class="v">R$ 179,90</span></div>
+          <div class="b-row"><span>Frete</span><span class="v">R$ 19,90</span></div>
+          <div class="b-row total"><span>Total</span><span class="v">R$ 199,80</span></div>
+          <button class="cta">Comprar na Shopee</button>
+        </div>
+        <div class="b-card">
+          <div class="b-head"><span class="chan">Tt</span><span class="chan-name">TikTok Shop</span></div>
+          <div class="b-row"><span>Preço</span><span class="v">R$ 184,90</span></div>
+          <div class="b-row"><span>Frete</span><span class="v">R$ 22,00</span></div>
+          <div class="b-row total"><span>Total</span><span class="v">R$ 206,90</span></div>
+          <button class="cta">Comprar na TikTok Shop</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- DIREÇÃO C -->
+    <div class="col">
+      <h2>Direção C — Total dominante</h2>
+      <div class="trade">O total é o herói (o que decide a compra); preço+frete viram uma linha secundária discreta. Escaneável em 1 olhar. Trade-off: o detalhamento do cálculo fica menos evidente que na B.</div>
+      <div class="device">
+        <div class="c-card best">
+          <div class="c-head"><span class="chan">Sh</span><span class="chan-name">Shopee</span><span class="badge-best">✓ Melhor custo</span></div>
+          <div class="c-flex">
+            <div>
+              <div class="c-total-label">Total com frete</div>
+              <div class="c-total">R$ 199,80</div>
+              <div class="c-break">R$ 179,90 + frete R$ 19,90</div>
+            </div>
+            <button class="cta">Comprar</button>
+          </div>
+        </div>
+        <div class="c-card">
+          <div class="c-head"><span class="chan">Tt</span><span class="chan-name">TikTok Shop</span></div>
+          <div class="c-flex">
+            <div>
+              <div class="c-total-label">Total com frete</div>
+              <div class="c-total">R$ 206,90</div>
+              <div class="c-break">R$ 184,90 + frete R$ 22,00</div>
+            </div>
+            <button class="cta">Comprar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</body>
+</html>

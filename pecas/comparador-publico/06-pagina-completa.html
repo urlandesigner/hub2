@@ -1,0 +1,210 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Comparador · Realinhamento Térmico 1L</title>
+<style>
+  /* GUARDRAIL: valores = tokens do KZ Design System. Exceção deliberada: logos (assets/). */
+  :root{
+    --neutral-50:#FFFFFF; --neutral-100:#FAF9FC; --neutral-200:#ECEBF0; --neutral-300:#E2E1E5;
+    --neutral-400:#C9C8CC; --neutral-500:#B0AFB2; --neutral-600:#6C6B6E; --neutral-700:#505052; --neutral-900:#1E1E1F;
+    --green-600:#50AE47; --green-100:#E6F6E5; --green-700:#33922A; --green-800:#2B6A25; --green-200:#D1EECE;
+    --red-600:#CF3030;
+    --bg-primary:#ECEBF0; --surface-primary:#FFFFFF; --surface-secondary:#FAF9FC; --surface-tertiary:#ECEBF0;
+    --text-primary:#1E1E1F; --text-secondary:#505052; --text-tertiary:#6C6B6E;
+    --border-primary:#E2E1E5; --border-input:#B0AFB2; --border-input-error:#CF3030;
+    --btn-enabled:#1E1E1F; --btn-text:#FFFFFF; --btn-disabled:#E2E1E5; --btn-text-disabled:#6C6B6E;
+    --text-negative:#EA5757;
+    --sp-100:4px; --sp-150:6px; --sp-200:8px; --sp-300:12px; --sp-400:16px; --sp-500:20px; --sp-600:24px; --sp-800:32px;
+    --r-200:8px; --r-300:12px; --r-400:16px; --r-full:9999px;
+    --b-25:1px; --b-50:2px; --shadow-sm:0 0 8px rgba(5,5,5,.10);
+    --font-title:'Syne', system-ui, sans-serif;
+    --font-body:'Nunito Sans', system-ui, sans-serif;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html,body{background:var(--bg-primary);}
+  body{font-family:var(--font-body); color:var(--text-primary); -webkit-font-smoothing:antialiased;
+    display:flex; justify-content:center; padding:var(--sp-600) 0;}
+  .app{width:100%; max-width:430px; background:var(--surface-secondary); min-height:90vh;
+    border:var(--b-25) solid var(--border-primary); border-radius:var(--r-400); overflow:hidden;
+    box-shadow:var(--shadow-sm); display:flex; flex-direction:column;}
+
+  /* HERO do produto — sem branding HUB (H-UX-05: experiência transparente) */
+  .hero{background:var(--surface-primary); padding:var(--sp-500) var(--sp-400) var(--sp-400);}
+  .hero .top{font-size:12px; line-height:16px; color:var(--text-tertiary); text-transform:uppercase;
+    letter-spacing:.06em; font-weight:700; margin-bottom:var(--sp-300);}
+  .hero .media{display:flex; gap:var(--sp-400); align-items:center;}
+  .hero img{width:88px; height:88px; border-radius:var(--r-300); object-fit:cover; flex:none; background:var(--surface-tertiary);}
+  .hero .pname{font-family:var(--font-title); font-weight:600; font-size:20px; line-height:24px; margin-bottom:var(--sp-100);}
+  .hero .pbrand{font-size:14px; line-height:20px; color:var(--text-secondary);}
+
+  /* barra de CEP (sticky) */
+  .cepwrap{position:sticky; top:0; z-index:5; background:var(--surface-secondary);
+    padding:var(--sp-400) var(--sp-400) var(--sp-200); border-bottom:var(--b-25) solid var(--border-primary);}
+  .bar{background:var(--surface-primary); border:var(--b-25) solid var(--border-primary); border-radius:var(--r-300); padding:var(--sp-300) var(--sp-400);}
+  .bar-row{display:flex; align-items:center; gap:var(--sp-300);}
+  .pin{font-size:18px; flex:none;}
+  .bar input{flex:1; min-width:0; height:44px; padding:0 var(--sp-300); border-radius:var(--r-200);
+    border:var(--b-25) solid var(--border-input); background:var(--surface-primary);
+    font-family:var(--font-body); font-size:15px; color:var(--text-primary);}
+  .bar input::placeholder{color:var(--text-tertiary);}
+  .bar input.error{border-color:var(--border-input-error); border-width:var(--b-50);}
+  .bar .ok{border:0; background:var(--btn-enabled); color:var(--btn-text); font-family:var(--font-body); font-weight:700;
+    font-size:14px; height:44px; min-width:44px; padding:0 var(--sp-400); border-radius:var(--r-200); cursor:pointer;}
+  .bar .ok:disabled{background:var(--btn-disabled); color:var(--btn-text-disabled); cursor:not-allowed;}
+  .bar-confirm{display:flex; align-items:center; gap:var(--sp-300);}
+  .bar-confirm .grow{flex:1; min-width:0;}
+  .lead{font-size:12px; line-height:16px; color:var(--text-tertiary);}
+  .dest{font-size:15px; line-height:20px; font-weight:700; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+  .check{color:var(--green-700); flex:none; font-size:18px;}
+  .link{color:var(--text-primary); font-weight:700; text-decoration:underline; text-underline-offset:2px; cursor:pointer; font-size:14px; flex:none;
+    min-height:44px; display:inline-flex; align-items:center; padding:0 var(--sp-100);}
+  .err-msg{color:var(--text-negative); font-size:13px; line-height:18px; margin-top:var(--sp-150); display:none;}
+  .err-msg.show{display:block;}
+
+  /* lista */
+  .list{padding:var(--sp-300) var(--sp-400) var(--sp-600); flex:1;}
+  .sortline{display:flex; align-items:center; justify-content:space-between; margin:var(--sp-200) 0 var(--sp-300);}
+  .sortline .n{font-size:14px; line-height:18px; font-weight:700; color:var(--text-secondary);}
+  .sortline .by{font-size:13px; line-height:18px; color:var(--text-tertiary);}
+
+  .chan{width:40px; height:40px; border-radius:var(--r-200); flex:none;
+    background:var(--surface-primary); border:var(--b-25) solid var(--border-primary);
+    padding:var(--sp-150); display:inline-flex; align-items:center; justify-content:center; overflow:hidden;}
+  .chan img{width:100%; height:100%; object-fit:contain; display:block;}
+  .card{background:var(--surface-primary); border:var(--b-25) solid var(--border-primary);
+    border-radius:var(--r-300); padding:var(--sp-400); margin-bottom:var(--sp-300); transition:border-color .2s ease;}
+  .card:last-child{margin-bottom:0;}
+  .card.best{border-color:var(--green-600); background:linear-gradient(180deg,var(--green-100) 0%, var(--surface-primary) 44%);}
+  .head{display:flex; align-items:center; gap:var(--sp-300); margin-bottom:var(--sp-300);}
+  .chan-name{font-weight:700; font-size:16px; line-height:20px; flex:1;}
+  .badge-best{display:inline-flex; align-items:center; gap:var(--sp-100); background:var(--green-100); color:var(--green-800);
+    border:var(--b-25) solid var(--green-200); font-size:12px; font-weight:700; line-height:16px; padding:2px var(--sp-200); border-radius:var(--r-full);}
+  .cbody{display:flex; align-items:flex-end; justify-content:space-between; gap:var(--sp-300);}
+  .val-label{font-size:12px; line-height:16px; color:var(--text-tertiary); text-transform:uppercase; letter-spacing:.04em;}
+  .val{font-family:var(--font-title); font-weight:700; font-size:28px; line-height:32px; margin:2px 0 var(--sp-100);}
+  .break{font-size:13px; line-height:18px; color:var(--text-tertiary);}
+  .break.pending{font-style:italic;}
+  .cta{border:0; cursor:pointer; background:var(--btn-enabled); color:var(--btn-text);
+    font-family:var(--font-body); font-weight:700; font-size:15px; line-height:20px;
+    padding:var(--sp-300) var(--sp-500); border-radius:var(--r-200); flex:none; align-self:center;}
+
+  .foot{padding:var(--sp-400); text-align:center; font-size:12px; line-height:16px; color:var(--text-tertiary);
+    border-top:var(--b-25) solid var(--border-primary);}
+</style>
+</head>
+<body>
+  <div class="app">
+    <div class="hero">
+      <div class="top">Compare e compre</div>
+      <div class="media">
+        <img src="assets/produto-hero.jpg" alt="Realinhamento Térmico 1L" onerror="this.style.display='none'">
+        <div>
+          <div class="pname">Realinhamento Térmico 1L</div>
+          <div class="pbrand">Ybera Fashion</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="cepwrap">
+      <div class="bar" id="bar"><!-- render por JS --></div>
+      <div class="err-msg" id="err">⚠ CEP não encontrado. Confira os números.</div>
+    </div>
+
+    <div class="list">
+      <div class="sortline">
+        <span class="n" id="count">3 canais</span>
+        <span class="by" id="sortby">ordenado por preço</span>
+      </div>
+      <div id="lista"></div>
+    </div>
+
+    <div class="foot">CEP usado apenas para calcular o frete — não é armazenado.</div>
+  </div>
+
+<script>
+  var channels = [
+    { id:'shopee',  name:'Shopee',      logo:'assets/Shopee.svg', price:179.90, ship:19.90 },
+    { id:'tiktok',  name:'TikTok Shop', logo:'assets/tiktok.svg', price:184.90, ship:22.00 },
+    { id:'ybera',   name:'Ybera.com',   logo:'assets/ybera.svg',  price:175.90, ship:38.90 }
+  ];
+  var hasCep = false;
+  function brl(n){ return 'R$ ' + n.toFixed(2).replace('.', ','); }
+
+  function renderBar(){
+    var bar = document.getElementById('bar');
+    if(!hasCep){
+      bar.innerHTML =
+        '<div class="bar-row">'+
+          '<span class="pin">📍</span>'+
+          '<input id="cep" inputmode="numeric" maxlength="9" placeholder="Digite seu CEP p/ ver o frete" aria-label="CEP">'+
+          '<button class="ok" id="okbtn" disabled>OK</button>'+
+        '</div>';
+      var input = document.getElementById('cep');
+      var btn = document.getElementById('okbtn');
+      input.addEventListener('input', function(){
+        var v = input.value.replace(/\D/g,'').slice(0,8);
+        if(v.length>5) v = v.slice(0,5)+'-'+v.slice(5);
+        input.value = v;
+        input.classList.remove('error');
+        document.getElementById('err').classList.remove('show');
+        btn.disabled = input.value.replace(/\D/g,'').length !== 8;
+      });
+      btn.addEventListener('click', function(){
+        // 00000-000 = CEP inválido (demonstra o estado de erro)
+        if(input.value.replace(/\D/g,'') === '00000000'){
+          input.classList.add('error');
+          document.getElementById('err').classList.add('show');
+          return;
+        }
+        hasCep = true;
+        render();
+      });
+    } else {
+      bar.innerHTML =
+        '<div class="bar-confirm">'+
+          '<span class="check">✓</span>'+
+          '<div class="grow"><div class="lead">Entregar em</div><div class="dest">01310-100 · São Paulo, SP</div></div>'+
+          '<span class="link" id="alter">Alterar</span>'+
+        '</div>';
+      document.getElementById('alter').addEventListener('click', function(){ hasCep=false; render(); });
+    }
+  }
+
+  function renderList(){
+    var sorted = channels.slice().sort(function(a,b){
+      return hasCep ? (a.price+a.ship)-(b.price+b.ship) : a.price-b.price;
+    });
+    document.getElementById('sortby').textContent = hasCep ? 'ordenado por menor total' : 'ordenado por preço';
+    document.getElementById('count').textContent = channels.length + ' canais';
+    var html = '';
+    for(var i=0;i<sorted.length;i++){
+      var c = sorted[i];
+      var best = hasCep && i===0;
+      var total = c.price + c.ship;
+      html +=
+        '<div class="card'+(best?' best':'')+'">'+
+          '<div class="head">'+
+            '<span class="chan"><img src="'+c.logo+'" alt="'+c.name+'"></span>'+
+            '<span class="chan-name">'+c.name+'</span>'+
+            (best?'<span class="badge-best">✓ Melhor custo</span>':'')+
+          '</div>'+
+          '<div class="cbody">'+
+            '<div>'+
+              '<div class="val-label">'+(hasCep?'Total com frete':'Preço')+'</div>'+
+              '<div class="val">'+brl(hasCep?total:c.price)+'</div>'+
+              '<div class="break'+(hasCep?'':' pending')+'">'+(hasCep?(brl(c.price)+' + frete '+brl(c.ship)):'+ frete · informe o CEP')+'</div>'+
+            '</div>'+
+            '<button class="cta">Comprar</button>'+
+          '</div>'+
+        '</div>';
+    }
+    document.getElementById('lista').innerHTML = html;
+  }
+
+  function render(){ renderBar(); renderList(); }
+  render();
+</script>
+</body>
+</html>

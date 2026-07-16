@@ -1,0 +1,437 @@
+<!doctype html>
+<!--
+  POC — dev-mode-virtual-office · vo-vinculos-e-onboarding
+  Fonte: cache/design_system.json + tokens_extracted.json (MODERNO: React/Tailwind/shadcn,
+  tokens b2c-*/kz-*, Syne+Nunito) — NÃO o tema Skote/Poppins legado. Página real de referência:
+  /catalog ("Catálogo de Produtos", slug ybera-com no cache), sidebar.html, topbar.html,
+  status-badges.html, empty-state.html (snippets reais).
+  Spec de origem: specs/vinculos-e-onboarding.md (Processo Compacto, Fase 02).
+  NOVO NESTA POC: painel de vínculos (Wake/Shopee/TikTok, 3 estados) + Modal A/B — ainda não
+  existe no app capturado; construído sobre os componentes reais da Tela A.
+  Ajuste de fidelidade consciente: o par bg/texto do badge "Aprovado" capturado em
+  status-badges.html (bg-b2c-positive-30/text-b2c-positive-20) mede 2.08:1 de contraste —
+  abaixo do WCAG AA. Usamos aqui o par bg-b2c-positive-10/text-b2c-positive-40 (mesmo token
+  set, 5.6:1), o padrão "soft badge" mais comum no próprio app para essa paleta.
+-->
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>POC — Painel de Vínculos · Catálogo Virtual (Escritório Ybera)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@500;600;700&family=Nunito:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+  :root{
+    /* ===== tokens REAIS (cache/design_system.json + tokens_extracted.json) ===== */
+    --b2c-primary:#db2955; --b2c-primary-hover:#b71943; --b2c-primary-20:#f06792;
+    --b2c-positive-10:#f2fcf5; --b2c-positive-40:#217338; --b2c-positive-30:#35b659;
+    --b2c-negative-10:#fef1f1; --b2c-negative-40:#b71f1f;
+    --b2c-warning-10:#fcf7ee; --b2c-warning-40:#a45c28; --b2c-warning-30:#d68a38;
+    --b2c-neutral-10:#ffffff; --b2c-neutral-20:#f4f4f5; --b2c-neutral-30:#e4e4e7;
+    --b2c-neutral-40:#d4d4d8; --b2c-neutral-50:#a1a1aa; --b2c-neutral-60:#71717a;
+    --b2c-neutral-70:#52525b; --b2c-neutral-80:#3f3f46; --b2c-neutral-90:#27272a;
+    --bg-app:#f4f4f5; --surface:#ffffff; --border:#d4d4d8; --border-soft:#e4e4e7;
+    --text:#71717a; --text-strong:#27272a; --text-muted:#a1a1aa;
+    --radius-xl:12px; --radius-lg:8px; --radius-full:9999px;
+    --font-display:'Syne',sans-serif; --font-body:'Nunito','Open Sans',system-ui,sans-serif;
+    --kz-100:4px; --kz-150:6px; --kz-200:8px; --kz-300:12px; --kz-400:16px;
+    --kz-500:20px; --kz-600:24px; --kz-800:32px; --kz-1000:40px;
+    --ease:cubic-bezier(.23,1,.32,1);
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{font-family:var(--font-body); font-size:14px; color:var(--text); background:var(--surface); -webkit-font-smoothing:antialiased;}
+  h1,h2,h3{font-family:var(--font-display); color:var(--text-strong); line-height:1.2;}
+  img{max-width:100%; display:block;}
+  button{font:inherit; cursor:pointer;}
+  a{color:inherit;}
+
+  /* ===== banner POC (convenção da skill — não remover) ===== */
+  .poc-banner{background:#fef3c7; color:#78350f; border-bottom:1px solid #fde68a;
+    padding:var(--kz-200) var(--kz-400); font-size:13px; text-align:center; position:sticky; top:0; z-index:999;}
+  .poc-banner strong{letter-spacing:.02em;}
+
+  /* ===== shell: sidebar + topbar (real, cache/snippets/sidebar.html + topbar.html) ===== */
+  .shell{display:flex; min-height:100vh; background:var(--bg-app);}
+  .sidebar{display:none; width:250px; flex:none; background:var(--surface); flex-direction:column;}
+  .sidebar .logo-wrap{padding:var(--kz-400); border-bottom:1px solid var(--border-soft);}
+  .sidebar .logo-wrap img{height:20px;}
+  .sidebar nav{flex:1; overflow-y:auto; padding:var(--kz-400);}
+  .sidebar .section-title{font-size:11px; font-weight:600; color:var(--b2c-neutral-50); margin:var(--kz-400) 0 var(--kz-100); text-transform:none;}
+  .sidebar .section-title:first-child{margin-top:0;}
+  .sidebar .nav-item{display:flex; align-items:center; gap:var(--kz-300); padding:10px var(--kz-200);
+    border-radius:var(--radius-lg); color:var(--text); text-decoration:none; font-size:14px; font-weight:600;}
+  .sidebar .nav-item.active{background:var(--b2c-neutral-20); color:var(--b2c-primary);}
+  .sidebar .nav-item:hover{background:var(--b2c-neutral-20);}
+  .sidebar .foot{border-top:1px solid var(--border-soft); padding:var(--kz-400); display:flex; align-items:center; gap:var(--kz-300);}
+  .sidebar .foot img{width:36px; height:36px; border-radius:var(--radius-full); object-fit:cover;}
+  .sidebar .foot .name{font-size:13px; font-weight:700; color:var(--text-strong);}
+  .sidebar .foot .role{font-size:12px; color:var(--text-muted);}
+
+  .main{flex:1; min-width:0;}
+  .topbar{margin:var(--kz-400); background:var(--surface); border-radius:16px; padding:10px var(--kz-400);
+    display:flex; align-items:center; justify-content:space-between;}
+  .topbar .hamburger{display:flex; background:none; border:0; color:var(--b2c-neutral-60); width:44px; height:44px; align-items:center; justify-content:center;}
+  .topbar .actions{display:flex; align-items:center; gap:var(--kz-300); margin-left:auto;}
+  .topbar .icon-btn{position:relative; width:44px; height:44px; display:flex; align-items:center; justify-content:center;
+    color:var(--b2c-neutral-60); background:none; border:0; border-radius:var(--radius-full);}
+  .topbar .icon-btn:hover{background:var(--b2c-neutral-20);}
+  .topbar .bell-badge{position:absolute; top:2px; right:2px; background:var(--b2c-primary); color:#fff;
+    font-size:9px; font-weight:700; border-radius:var(--radius-full); padding:1px 4px; line-height:1.4;}
+
+  .app-body{padding:var(--kz-400); max-width:1200px; margin:0 auto;}
+  .page-title{font-size:20px; font-weight:600; margin-bottom:var(--kz-400);}
+
+  /* ===== card wrapper real (rounded-xl bg-white shadow-none) ===== */
+  .card{background:var(--surface); border-radius:var(--radius-xl); box-shadow:none; border:1px solid var(--border-soft);}
+  .card-pad{padding:var(--kz-400);}
+  @media (min-width:1024px){ .card-pad{padding:var(--kz-600);} }
+
+  /* ===== PAINEL DE VÍNCULOS — peça-núcleo desta demanda ===== */
+  .vinc-panel{margin-bottom:var(--kz-500);}
+  /* ===== skeleton de loading do painel (RF-10: status vem do banco) ===== */
+  @keyframes vinc-pulse{0%,100%{opacity:1}50%{opacity:.55}}
+  .sk-bar{background:var(--b2c-neutral-20); border-radius:var(--radius-lg); animation:vinc-pulse 1.3s ease-in-out infinite;}
+  .vinc-sk-row{border:1px solid var(--border-soft); border-radius:var(--radius-lg); padding:var(--kz-400); display:flex; flex-direction:column; gap:var(--kz-300);}
+  .vinc-sk-top{display:flex; align-items:center; gap:var(--kz-300);}
+  .vinc-sk-icon{width:36px; height:36px; border-radius:var(--radius-lg); flex:none;}
+  .vinc-sk-line{height:14px; width:60%;}
+  .vinc-sk-badge{height:20px; width:90px; border-radius:var(--radius-full);}
+  .vinc-sk-text{height:12px; width:85%;}
+  @media (prefers-reduced-motion:reduce){ .sk-bar{animation:none; opacity:.7;} }
+  .vinc-head{display:flex; align-items:baseline; justify-content:space-between; gap:var(--kz-300); margin-bottom:var(--kz-400); flex-wrap:wrap;}
+  .vinc-head h2{font-size:16px; font-weight:600;}
+  .vinc-head .hint{font-size:12px; color:var(--text-muted);}
+  .vinc-grid{display:grid; gap:var(--kz-300); grid-template-columns:1fr;}
+  @media (min-width:768px){ .vinc-grid{grid-template-columns:repeat(3,1fr);} }
+
+  .vinc-row{border:1px solid var(--border-soft); border-radius:var(--radius-lg); padding:var(--kz-400);
+    display:flex; flex-direction:column; gap:var(--kz-300);}
+  .vinc-top{display:flex; align-items:center; gap:var(--kz-300);}
+  .vinc-chan-icon{width:36px; height:36px; border-radius:var(--radius-lg); background:var(--b2c-neutral-20);
+    display:flex; align-items:center; justify-content:center; font-family:var(--font-display); font-weight:700; font-size:13px; color:var(--text-strong); flex:none;}
+  .vinc-chan-name{font-weight:700; font-size:14px; color:var(--text-strong); flex:1;}
+
+  .vinc-badge{display:inline-flex; align-items:center; gap:5px; padding:3px 10px; border-radius:var(--radius-full);
+    font-size:11px; font-weight:700; white-space:nowrap; width:fit-content;}
+  .vinc-badge::before{content:""; width:6px; height:6px; border-radius:50%; background:currentColor; flex:none;}
+  .vinc-badge--ok{background:var(--b2c-positive-10); color:var(--b2c-positive-40);}
+  .vinc-badge--pending{background:var(--b2c-neutral-20); color:var(--b2c-neutral-70);}
+  .vinc-badge--expired{background:var(--b2c-warning-10); color:var(--b2c-warning-40);}
+
+  .vinc-action{font-size:13px; color:var(--text); line-height:1.4;}
+  .vinc-link{display:inline-flex; align-items:center; min-height:44px; font-weight:700; text-decoration:underline;
+    text-underline-offset:2px; background:none; border:0; padding:2px 0; font-size:13px; text-align:left;}
+  .vinc-link--pending{color:var(--b2c-primary);}
+  .vinc-link--expired{color:var(--b2c-warning-40);}
+  .vinc-link:hover{color:var(--b2c-primary-hover);}
+
+  /* ===== barra de busca real (condensada) ===== */
+  .search-bar{display:flex; gap:var(--kz-300); align-items:center; margin-bottom:var(--kz-400); flex-wrap:wrap;}
+  .search-input{flex:1; min-width:180px; height:44px; padding:0 var(--kz-300); border:1px solid var(--border);
+    border-radius:var(--radius-lg); font:inherit; font-size:14px; color:var(--text-strong);}
+  .search-input:focus-visible{outline:2px solid var(--b2c-primary); outline-offset:1px;}
+
+  /* ===== grid de produtos real (fora do escopo desta spec — só contexto) ===== */
+  .prod-grid{display:grid; gap:var(--kz-300); grid-template-columns:repeat(2,1fr);}
+  @media (min-width:768px){ .prod-grid{grid-template-columns:repeat(3,1fr);} }
+  @media (min-width:1280px){ .prod-grid{grid-template-columns:repeat(4,1fr);} }
+  .prod-card{border-radius:var(--radius-xl); background:var(--surface); border:1px solid var(--border-soft); padding:var(--kz-300);}
+  .prod-card img{border-radius:var(--radius-lg); aspect-ratio:1/1; object-fit:cover; background:var(--b2c-neutral-20); margin-bottom:var(--kz-200);}
+  .prod-name{font-size:13px; font-weight:700; color:var(--text-strong); margin-bottom:var(--kz-300); min-height:34px;}
+  .prod-cta-row{display:flex; gap:var(--kz-200);}
+  .btn-outline, .btn-fill{flex:1; display:flex; align-items:center; justify-content:center; gap:6px;
+    border-radius:var(--radius-lg); font-size:12px; font-weight:700; padding:8px; min-height:36px; border:1px solid var(--b2c-primary);}
+  .btn-outline{background:var(--surface); color:var(--text-strong);}
+  .btn-fill{background:var(--b2c-primary); color:#fff;}
+  .scope-note{font-size:12px; color:var(--text-muted); margin-top:var(--kz-300); font-style:italic;}
+
+  /* ===== Modais (A e B) ===== */
+  .modal-overlay{position:fixed; inset:0; background:rgba(39,39,42,.5); display:none; align-items:flex-end;
+    justify-content:center; z-index:1000; padding:0;}
+  .modal-overlay.open{display:flex;}
+  @media (min-width:640px){ .modal-overlay{align-items:center; padding:var(--kz-400);} }
+  .modal{background:var(--surface); width:100%; max-width:520px; border-radius:20px 20px 0 0;
+    max-height:92vh; overflow-y:auto; padding:var(--kz-500);}
+  @media (min-width:640px){ .modal{border-radius:var(--radius-xl);} }
+  .modal-head{display:flex; align-items:flex-start; gap:var(--kz-300); margin-bottom:var(--kz-400);}
+  .modal-ico{width:44px; height:44px; border-radius:var(--radius-full); flex:none; display:flex; align-items:center; justify-content:center; font-size:20px;}
+  .modal-ico--new{background:var(--b2c-positive-10); color:var(--b2c-positive-40);}
+  .modal-ico--warn{background:var(--b2c-warning-10); color:var(--b2c-warning-40);}
+  .modal-head h3{font-size:18px; font-weight:700; margin-bottom:2px;}
+  .modal-head p{font-size:13px; color:var(--text);}
+  .modal-close{margin-left:auto; width:44px; height:44px; border-radius:var(--radius-full); border:0; background:var(--b2c-neutral-20);
+    display:flex; align-items:center; justify-content:center; flex:none; font-size:16px; color:var(--text-strong);}
+  .modal-video{aspect-ratio:16/9; background:var(--b2c-neutral-90); border-radius:var(--radius-lg); display:flex;
+    flex-direction:column; align-items:center; justify-content:center; color:#fff; gap:var(--kz-200); margin-bottom:var(--kz-400);}
+  .modal-video .play{width:48px; height:48px; border-radius:var(--radius-full); background:rgba(255,255,255,.15);
+    display:flex; align-items:center; justify-content:center; font-size:20px;}
+  .modal-video small{font-size:11px; color:var(--b2c-neutral-40);}
+  .modal-steps{list-style:none; display:flex; flex-direction:column; gap:var(--kz-300); margin-bottom:var(--kz-500);}
+  .modal-steps li{display:flex; gap:var(--kz-300); font-size:13px; line-height:1.5;}
+  .modal-steps .n{width:24px; height:24px; border-radius:var(--radius-full); background:var(--b2c-neutral-20); color:var(--text-strong);
+    font-weight:700; font-size:12px; display:flex; align-items:center; justify-content:center; flex:none;}
+  .modal-cta{display:flex; flex-direction:column; gap:var(--kz-200);}
+  .btn-primary{background:var(--b2c-primary); color:#fff; border:0; border-radius:var(--radius-lg); min-height:48px;
+    font-weight:700; font-size:15px; transition:background 150ms var(--ease);}
+  .btn-primary:hover{background:var(--b2c-primary-hover);}
+  .btn-ghost{background:none; border:0; color:var(--text); font-weight:700; font-size:14px; min-height:44px;}
+
+  /* ===== meta da POC ===== */
+  .poc-meta{max-width:1200px; margin:var(--kz-800) auto var(--kz-1000); padding:0 var(--kz-400); border-top:1px dashed var(--border); padding-top:var(--kz-500);}
+  .poc-meta h3{font-size:12px; text-transform:uppercase; letter-spacing:.05em; color:var(--text-muted); margin-bottom:var(--kz-200);}
+  .poc-meta section + section{margin-top:var(--kz-400);}
+  .poc-meta p{font-size:14px; line-height:1.6; color:var(--text);}
+
+  @media (min-width:1024px){
+    .sidebar{display:flex;}
+    .topbar .hamburger{display:none;}
+  }
+  .sr-only{position:absolute; width:1px; height:1px; overflow:hidden; clip-path:inset(50%); white-space:nowrap;}
+  :focus-visible{outline:2px solid var(--b2c-primary); outline-offset:2px;}
+  [hidden]{display:none !important;}
+</style>
+</head>
+<body>
+
+<div class="poc-banner"><strong>POC — NÃO ESTÁ EM PRODUÇÃO.</strong> Painel de vínculos + onboarding OAuth · Catálogo Virtual · Escritório Ybera Club. Gerada com dev-mode-virtual-office a partir do app real.</div>
+
+<div class="shell">
+  <aside class="sidebar" aria-label="Navegação principal">
+    <div class="logo-wrap"><img src="assets/img/logo.png" alt="Ybera Club"></div>
+    <nav>
+      <p class="section-title">Lojas</p>
+      <a class="nav-item active" href="#">🛍️ Ybera.com</a>
+      <a class="nav-item" href="#">🏪 Loja Interna</a>
+      <p class="section-title">Financeiro</p>
+      <a class="nav-item" href="#">🔓 Desbloqueio</a>
+      <a class="nav-item" href="#">💸 Sacar</a>
+      <a class="nav-item" href="#">📄 Extrato</a>
+      <p class="section-title">Rede</p>
+      <a class="nav-item" href="#">👥 Equipe Direta</a>
+      <p class="section-title">Suporte</p>
+      <a class="nav-item" href="#">🎫 Central de Ajuda</a>
+    </nav>
+    <div class="foot">
+      <img src="assets/img/avatar-default.jpg" alt="">
+      <div><div class="name">Ana C.</div><div class="role">Embaixadora Ybera Club</div></div>
+    </div>
+  </aside>
+
+  <div class="main">
+    <div class="topbar">
+      <button class="hamburger" aria-label="Abrir menu">☰</button>
+      <div class="actions">
+        <button class="icon-btn" aria-label="Link de afiliado">🔗</button>
+        <button class="icon-btn" aria-label="Notificações, 9 ou mais não lidas">🔔<span class="bell-badge" aria-hidden="true">9+</span></button>
+      </div>
+    </div>
+
+    <main class="app-body">
+      <h1 class="page-title">Catálogo de Produtos</h1>
+
+      <!-- ============ PAINEL DE VÍNCULOS (peça-núcleo desta demanda) ============ -->
+      <section class="card vinc-panel" aria-labelledby="vinc-title">
+        <div class="card-pad">
+          <div class="vinc-head">
+            <h2 id="vinc-title">Vínculos de canal</h2>
+            <span class="hint">Necessário para garantir sua comissão em cada canal</span>
+          </div>
+
+          <!-- skeleton — visível até o status real chegar (RF-10) -->
+          <div class="vinc-grid" id="vinc-skeleton" aria-hidden="true">
+            <div class="vinc-sk-row"><div class="vinc-sk-top"><div class="sk-bar vinc-sk-icon"></div><div class="sk-bar vinc-sk-line"></div></div><div class="sk-bar vinc-sk-badge"></div><div class="sk-bar vinc-sk-text"></div></div>
+            <div class="vinc-sk-row"><div class="vinc-sk-top"><div class="sk-bar vinc-sk-icon"></div><div class="sk-bar vinc-sk-line"></div></div><div class="sk-bar vinc-sk-badge"></div><div class="sk-bar vinc-sk-text"></div></div>
+            <div class="vinc-sk-row"><div class="vinc-sk-top"><div class="sk-bar vinc-sk-icon"></div><div class="sk-bar vinc-sk-line"></div></div><div class="sk-bar vinc-sk-badge"></div><div class="sk-bar vinc-sk-text"></div></div>
+          </div>
+          <p id="vinc-sr-status" class="sr-only" role="status">Carregando status de vínculo dos canais…</p>
+
+          <div class="vinc-grid" id="vinc-real" hidden>
+            <!-- Wake — Vinculado -->
+            <div class="vinc-row">
+              <div class="vinc-top">
+                <span class="vinc-chan-icon" aria-hidden="true">Yb</span>
+                <span class="vinc-chan-name">Ybera.com (Wake)</span>
+              </div>
+              <span class="vinc-badge vinc-badge--ok">Vinculado</span>
+              <p class="vinc-action">Sem ação pendente — seu link já garante comissão neste canal.</p>
+            </div>
+
+            <!-- Shopee — Nunca vinculou -->
+            <div class="vinc-row">
+              <div class="vinc-top">
+                <span class="vinc-chan-icon" aria-hidden="true">Sh</span>
+                <span class="vinc-chan-name">Shopee</span>
+              </div>
+              <span class="vinc-badge vinc-badge--pending">Nunca vinculou</span>
+              <button class="vinc-link vinc-link--pending" data-open-modal="modal-a" data-canal="Shopee">Como vincular Shopee ao seu Hub</button>
+            </div>
+
+            <!-- TikTok — Vínculo expirado -->
+            <div class="vinc-row">
+              <div class="vinc-top">
+                <span class="vinc-chan-icon" aria-hidden="true">Tt</span>
+                <span class="vinc-chan-name">TikTok Shop</span>
+              </div>
+              <span class="vinc-badge vinc-badge--expired">Vínculo expirado</span>
+              <button class="vinc-link vinc-link--expired" data-open-modal="modal-b" data-canal="TikTok">Sua conexão com TikTok expirou — reconectar</button>
+            </div>
+          </div>
+        </div>
+      </section>
+      <!-- ============ fim do painel de vínculos ============ -->
+
+      <div class="search-bar">
+        <input class="search-input" type="text" placeholder="Nome do Produto" aria-label="Buscar produto">
+      </div>
+
+      <div class="prod-grid">
+        <div class="prod-card">
+          <img src="assets/img/avatar-default.jpg" alt="" style="visibility:hidden;">
+          <div class="prod-name">Realinhamento Térmico 1L</div>
+          <div class="prod-cta-row"><button class="btn-outline">↗ Copiar</button><button class="btn-fill">🛒 Comprar</button></div>
+        </div>
+        <div class="prod-card">
+          <img src="assets/img/avatar-default.jpg" alt="" style="visibility:hidden;">
+          <div class="prod-name">Óleo Reparador Mirra</div>
+          <div class="prod-cta-row"><button class="btn-outline">↗ Copiar</button><button class="btn-fill">🛒 Comprar</button></div>
+        </div>
+      </div>
+      <p class="scope-note">Grid de produtos e botões Copiar/Comprar: estrutura já existente, fora do escopo desta demanda — mostrada só como contexto do painel acima.</p>
+    </main>
+  </div>
+</div>
+
+<!-- ============ MODAL A — Primeira vinculação ============ -->
+<div class="modal-overlay" id="modal-a" role="dialog" aria-modal="true" aria-labelledby="modal-a-title">
+  <div class="modal">
+    <div class="modal-head">
+      <span class="modal-ico modal-ico--new" aria-hidden="true">✨</span>
+      <div>
+        <h3 id="modal-a-title">Como vincular <span data-canal-name>Shopee</span> ao seu Hub</h3>
+        <p>Primeira vez conectando este canal — leva menos de 2 minutos.</p>
+      </div>
+      <button class="modal-close" data-close-modal aria-label="Fechar">✕</button>
+    </div>
+    <div class="modal-video">
+      <span class="play" aria-hidden="true">▶</span>
+      <span>Vídeo tutorial</span>
+      <small>placeholder — asset real a definir com Suporte/Conteúdo</small>
+    </div>
+    <ol class="modal-steps">
+      <li><span class="n">1</span> Acesse sua conta de vendedor/afiliado na Shopee.</li>
+      <li><span class="n">2</span> Em Configurações de Afiliados, autorize o acesso da Ybera.</li>
+      <li><span class="n">3</span> Volte aqui — o status atualiza automaticamente em poucos minutos.</li>
+    </ol>
+    <div class="modal-cta">
+      <button class="btn-primary">Já autorizei, verificar status</button>
+      <button class="btn-ghost" data-close-modal>Fazer isso depois</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ MODAL B — Reautorização (token expirado) ============ -->
+<div class="modal-overlay" id="modal-b" role="dialog" aria-modal="true" aria-labelledby="modal-b-title">
+  <div class="modal">
+    <div class="modal-head">
+      <span class="modal-ico modal-ico--warn" aria-hidden="true">⚠</span>
+      <div>
+        <h3 id="modal-b-title">Reconecte sua conta <span data-canal-name>TikTok</span></h3>
+        <p>Sua autorização anterior expirou — é rápido reconectar, sem perder seu histórico.</p>
+      </div>
+      <button class="modal-close" data-close-modal aria-label="Fechar">✕</button>
+    </div>
+    <div class="modal-video">
+      <span class="play" aria-hidden="true">▶</span>
+      <span>Vídeo tutorial</span>
+      <small>placeholder — asset real a definir com Suporte/Conteúdo</small>
+    </div>
+    <ol class="modal-steps">
+      <li><span class="n">1</span> Acesse sua conta de afiliado no TikTok Shop.</li>
+      <li><span class="n">2</span> Renove a autorização de acesso da Ybera — mesmo processo de antes.</li>
+      <li><span class="n">3</span> Volte aqui — o status volta a "Vinculado" em poucos minutos.</li>
+    </ol>
+    <div class="modal-cta">
+      <button class="btn-primary">Já reautorizei, verificar status</button>
+      <button class="btn-ghost" data-close-modal>Fazer isso depois</button>
+    </div>
+  </div>
+</div>
+
+<section class="poc-meta">
+  <section>
+    <h3>O que mudou vs. o estado atual</h3>
+    <p>O painel de vínculos (Wake/Shopee/TikTok) e os modais de onboarding/reautorização são
+    <strong>novos</strong> — não existem na Tela A capturada (o Catálogo hoje só tem busca + grid).
+    Esta POC insere o painel acima do grid, sem scroll extra, e resolve H-UX-04: OAuth é conduzido
+    inteiramente aqui, via link → Modal, sem navegação para fora da tela.</p>
+  </section>
+  <section>
+    <h3>Hipótese de impacto</h3>
+    <p>Tornar o estado de vínculo visível e acionável reduz comissão perdida por canal não
+    autorizado (hoje invisível para a influenciadora) e reduz chamados de suporte sobre "cadê
+    minha comissão da Shopee/TikTok". Risco conhecido (Q-11/Q-12 do DRP): cobertura real de
+    autorização no 1º ciclo é incerta — "nunca vinculou" foi tratado aqui como estado comum, não
+    exceção.</p>
+  </section>
+  <section>
+    <h3>Próximos passos sugeridos</h3>
+    <p>1) Validar com Suporte/Conteúdo a copy final e o vídeo real do Modal A/B (aqui é
+    placeholder). 2) Confirmar com Engenharia a origem do status (RF-10, leitura direta do banco)
+    e o comportamento de refresh automático de token (RF-11). 3) Rodar o portão de qualidade
+    (Fase 03 do Processo Compacto) sobre esta peça antes de qualquer handoff.</p>
+  </section>
+</section>
+
+<script>
+(function(){
+  // painel de vínculos: skeleton -> status real (simula fetch RF-10)
+  var sk = document.getElementById('vinc-skeleton');
+  var real = document.getElementById('vinc-real');
+  var status = document.getElementById('vinc-sr-status');
+  setTimeout(function(){
+    if(sk) sk.hidden = true;
+    if(real) real.hidden = false;
+    if(status) status.textContent = 'Status de vínculo dos canais carregado.';
+  }, 700);
+})();
+
+(function(){
+  var overlays = document.querySelectorAll('.modal-overlay');
+  var lastTrigger = null;
+  var shell = document.querySelector('.shell');
+  function open(id, canal, trigger){
+    var el = document.getElementById(id);
+    if(!el) return;
+    lastTrigger = trigger;
+    el.classList.add('open');
+    el.querySelectorAll('[data-canal-name]').forEach(function(s){ s.textContent = canal; });
+    var closeBtn = el.querySelector('.modal-close');
+    if(closeBtn) closeBtn.focus();
+    document.body.style.overflow = 'hidden';
+    if(shell) shell.setAttribute('inert', '');
+  }
+  function closeAll(){
+    overlays.forEach(function(o){ o.classList.remove('open'); });
+    document.body.style.overflow = '';
+    if(shell) shell.removeAttribute('inert');
+    if(lastTrigger) lastTrigger.focus();
+  }
+  document.querySelectorAll('[data-open-modal]').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      open(btn.getAttribute('data-open-modal'), btn.getAttribute('data-canal'), btn);
+    });
+  });
+  document.querySelectorAll('[data-close-modal]').forEach(function(btn){
+    btn.addEventListener('click', closeAll);
+  });
+  overlays.forEach(function(o){
+    o.addEventListener('click', function(e){ if(e.target === o) closeAll(); });
+  });
+  document.addEventListener('keydown', function(e){
+    if(e.key === 'Escape') closeAll();
+  });
+})();
+</script>
+</body>
+</html>

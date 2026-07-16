@@ -1,0 +1,17 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "comet-card-preview",
+      "runtimeExecutable": "bash",
+      "runtimeArgs": ["-c", "cd '/Users/urlandipre/Documents/Projetos Ybera/comet-card-preview' && npm run dev -- --port 5183"],
+      "port": 5183
+    },
+    {
+      "name": "comparador-publico-static",
+      "runtimeExecutable": "node",
+      "runtimeArgs": ["/Users/urlandipre/Documents/Projetos Ybera/Hub v5 fluxo P/.claude/static-server.cjs"],
+      "port": 5199
+    }
+  ]
+}

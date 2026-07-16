@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Peça 07b — Estados premium · comparador-publico</title>
+<!--
+  Estados de exceção no skin premium (linguagem da peça 07).
+  GUARDRAIL: 100% tokens KZ. Fecha o follow-up carimbado: loading, vazio, link-inválido.
+-->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@500;600;700;800&family=Nunito+Sans:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --n-50:#FFFFFF; --n-100:#FAF9FC; --n-200:#ECEBF0; --n-300:#E2E1E5; --n-400:#C9C8CC;
+    --n-500:#B0AFB2; --n-600:#6C6B6E; --n-700:#505052; --n-800:#373738; --n-900:#1E1E1F; --n-950:#050505;
+    --club-50:#FEF0F4; --club-100:#FEC8D8; --club-300:#FB749B; --club-400:#FA4277;
+    --club-500:#ED1A57; --club-600:#C70F43; --club-700:#980B38;
+    --surface:var(--n-50); --brand-dark:var(--n-900);
+    --text:var(--n-900); --text-2:var(--n-700); --text-3:var(--n-600);
+    --on-dark:#FFFFFF; --on-dark-2:var(--n-200); --on-dark-3:var(--n-400);
+    --btn:var(--n-900); --btn-hover:var(--n-700);
+    --s1:4px; --s2:8px; --s3:12px; --s4:16px; --s5:20px; --s6:24px; --s8:32px; --s10:40px; --s12:48px; --s16:64px; --s20:80px;
+    --r2:8px; --r3:12px; --r4:16px; --r6:24px; --rf:9999px;
+    --display:'Syne',sans-serif; --body:'Nunito Sans',sans-serif;
+    --ease:cubic-bezier(.23,1,.32,1);
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{font-family:var(--body);color:var(--text);font-size:16px;line-height:1.5;-webkit-font-smoothing:antialiased;
+    background:var(--n-200);padding:var(--s6) var(--s4) var(--s20)}
+  .page-title{font-family:var(--display);font-weight:600;font-size:24px;line-height:32px;margin-bottom:var(--s2)}
+  .page-sub{font-size:14px;line-height:20px;color:var(--text-2);margin-bottom:var(--s8);max-width:600px}
+  .stage{display:flex;flex-wrap:wrap;gap:var(--s8);align-items:flex-start}
+  .col{flex:1 1 320px;max-width:400px}
+  .state-label{font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--text-3);font-weight:700;margin-bottom:var(--s3)}
+  .device{border-radius:var(--r4);overflow:hidden;border:1px solid var(--n-300);box-shadow:0 8px 24px rgba(5,5,5,.06)}
+
+  /* contexto quente do comparador (loading/vazio) */
+  .wrap{background:linear-gradient(180deg,var(--n-100) 0%,var(--club-50) 55%,var(--n-100) 100%);padding:var(--s8) var(--s5) var(--s10);min-height:520px}
+  .sec-head{text-align:center;margin-bottom:var(--s8)}
+  .eyebrow{font-size:12px;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:var(--club-600);margin-bottom:var(--s3)}
+  .sec-head h2{font-family:var(--display);font-weight:600;font-size:clamp(1.6rem,5vw,2rem);line-height:1.15;letter-spacing:-.01em}
+  .sec-head .sub{margin-top:var(--s3);color:var(--text-3);font-size:15px}
+
+  /* skeleton premium */
+  .sk-card{background:var(--surface);border:1px solid var(--n-300);border-radius:var(--r4);padding:var(--s6)}
+  .sk{position:relative;overflow:hidden;background:var(--n-200);border-radius:var(--r2)}
+  .sk::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,.75),transparent);animation:sh 1.2s infinite}
+  @keyframes sh{from{transform:translateX(-100%)}to{transform:translateX(100%)}}
+  .sk-head{display:flex;gap:var(--s3);align-items:center;margin-bottom:var(--s5)}
+  .sk-row{height:12px;margin-bottom:var(--s3)}
+
+  /* vazio premium */
+  .empty{background:var(--surface);border:1px solid var(--n-300);border-radius:var(--r4);padding:var(--s12) var(--s6);text-align:center}
+  .empty .ico{width:60px;height:60px;margin:0 auto var(--s5);border-radius:var(--rf);background:var(--club-50);display:grid;place-items:center;color:var(--club-500)}
+  .empty h3{font-family:var(--display);font-weight:600;font-size:22px;line-height:28px;margin-bottom:var(--s3)}
+  .empty p{color:var(--text-2);font-size:15px;max-width:34ch;margin:0 auto var(--s6)}
+  .btn{display:inline-flex;align-items:center;gap:var(--s2);font-family:var(--body);font-weight:700;font-size:15px;
+    min-height:48px;border-radius:var(--rf);padding:var(--s3) var(--s6);cursor:pointer;border:0;
+    transition:transform 150ms var(--ease),background-color 240ms var(--ease)}
+  .btn-dark{background:var(--btn);color:#fff}
+  .btn-dark:active{transform:scale(.97)}
+  @media(hover:hover){.btn-dark:hover{background:var(--btn-hover)}}
+  .btn-light{background:#fff;color:var(--n-900)}
+  @media(hover:hover){.btn-light:hover{background:var(--n-200)}}
+
+  /* 404 editorial escuro */
+  .v404{background:var(--brand-dark);color:var(--on-dark);min-height:520px;display:flex;flex-direction:column;
+    align-items:center;justify-content:center;text-align:center;padding:var(--s16) var(--s6);
+    background-image:radial-gradient(70% 50% at 80% 15%,rgba(237,26,87,.16),transparent 62%)}
+  .v404 .wordmark{display:flex;align-items:center;gap:var(--s3);margin-bottom:var(--s10)}
+  .v404 .wordmark img{height:18px;filter:brightness(0) invert(1)}
+  .v404 .wordmark span{font-family:var(--display);font-weight:700;font-size:14px;letter-spacing:.34em}
+  .v404 .num{font-family:var(--display);font-weight:800;font-size:clamp(4rem,20vw,7rem);line-height:1;color:var(--n-700)}
+  .v404 h2{font-family:var(--display);font-weight:600;font-size:22px;margin:var(--s5) 0 var(--s3)}
+  .v404 p{color:var(--on-dark-2);max-width:36ch;margin:0 auto var(--s6);font-size:15px}
+  .reveal{opacity:0;transform:translateY(10px);animation:rv .5s var(--ease) forwards}
+  @keyframes rv{to{opacity:1;transform:none}}
+  @media(prefers-reduced-motion:reduce){.reveal{animation:none;opacity:1;transform:none}.sk::after{animation:none}}
+  button:focus-visible,a:focus-visible{outline:2px solid var(--club-500);outline-offset:3px;border-radius:var(--r2)}
+</style>
+</head>
+<body>
+  <div class="page-title">Peça 07b — Estados de exceção · skin premium</div>
+  <div class="page-sub">Loading, vazio e link-inválido portados para a linguagem da peça 07 (Syne, calor Ybera, editorial). Fecha o follow-up carimbado. Em produção, entram no <code>render()</code> da 07 conforme a disponibilidade real (RF-004/006). Tokens KZ.</div>
+
+  <div class="stage">
+
+    <!-- LOADING -->
+    <div class="col">
+      <div class="state-label">Loading — skeleton premium</div>
+      <div class="device">
+        <div class="wrap">
+          <div class="sec-head">
+            <p class="eyebrow">Compare e escolha</p>
+            <h2>Onde comprar este produto</h2>
+            <p class="sub">Buscando as melhores ofertas…</p>
+          </div>
+          <div class="sk-card">
+            <div class="sk-head"><div class="sk" style="width:44px;height:44px;border-radius:12px"></div><div style="flex:1"><div class="sk sk-row" style="width:55%"></div><div class="sk" style="height:10px;width:38%"></div></div></div>
+            <div class="sk sk-row"></div><div class="sk sk-row"></div><div class="sk sk-row" style="width:80%"></div>
+            <div class="sk" style="height:36px;width:50%;margin:20px 0 16px"></div>
+            <div class="sk" style="height:48px;border-radius:9999px"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- VAZIO -->
+    <div class="col">
+      <div class="state-label">Vazio — nenhum canal disponível</div>
+      <div class="device">
+        <div class="wrap">
+          <div class="sec-head">
+            <p class="eyebrow">Compare e escolha</p>
+            <h2>Onde comprar este produto</h2>
+          </div>
+          <div class="empty reveal">
+            <span class="ico"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg></span>
+            <h3>Comparação indisponível agora</h3>
+            <p>Estamos atualizando os preços dos canais. Tente de novo em instantes — o link continua valendo.</p>
+            <button class="btn btn-dark">Tentar de novo</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 404 / LINK INVÁLIDO -->
+    <div class="col">
+      <div class="state-label">Link inválido / expirado</div>
+      <div class="device">
+        <div class="v404">
+          <div class="wordmark reveal"><img src="assets/ybera.svg" alt="" width="18" height="18"><span>YBERA</span></div>
+          <div class="num" aria-hidden="true">404</div>
+          <h2>Esse link não existe mais</h2>
+          <p>O link que você recebeu pode ter expirado ou sido digitado errado. Peça um novo para quem te enviou.</p>
+          <a class="btn btn-light" href="https://www.ybera.com/">Ir para a Ybera.com</a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</body>
+</html>

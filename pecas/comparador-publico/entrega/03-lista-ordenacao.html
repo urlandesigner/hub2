@@ -1,0 +1,223 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Peça 03 — Lista + ordenação · comparador-publico</title>
+<style>
+  /* GUARDRAIL: todos os valores são tokens do KZ Design System. Nada inventado.
+     Exceção deliberada: logos de canal (assets/). */
+  :root{
+    --neutral-50:#FFFFFF; --neutral-100:#FAF9FC; --neutral-200:#ECEBF0; --neutral-300:#E2E1E5;
+    --neutral-400:#C9C8CC; --neutral-500:#B0AFB2; --neutral-600:#6C6B6E; --neutral-700:#505052; --neutral-900:#1E1E1F;
+    --green-600:#50AE47; --green-100:#E6F6E5; --green-700:#33922A; --green-800:#2B6A25; --green-200:#D1EECE;
+    --bg-primary:#ECEBF0; --surface-primary:#FFFFFF; --surface-secondary:#FAF9FC; --surface-tertiary:#ECEBF0;
+    --text-primary:#1E1E1F; --text-secondary:#505052; --text-tertiary:#6C6B6E;
+    --border-primary:#E2E1E5; --border-input:#B0AFB2;
+    --btn-enabled:#1E1E1F; --btn-text:#FFFFFF; --btn-disabled:#E2E1E5; --btn-text-disabled:#6C6B6E;
+    --sp-100:4px; --sp-150:6px; --sp-200:8px; --sp-300:12px; --sp-400:16px; --sp-500:20px; --sp-600:24px; --sp-800:32px;
+    --r-200:8px; --r-300:12px; --r-400:16px; --r-full:9999px;
+    --b-25:1px; --shadow-sm:0 0 8px rgba(5,5,5,.10);
+    --font-title:'Syne', system-ui, sans-serif;
+    --font-body:'Nunito Sans', system-ui, sans-serif;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{font-family:var(--font-body); background:var(--bg-primary); color:var(--text-primary);
+    padding:var(--sp-600) var(--sp-400) 80px; -webkit-font-smoothing:antialiased;}
+  .page-title{font-family:var(--font-title); font-size:24px; line-height:32px; font-weight:600; margin-bottom:var(--sp-200);}
+  .page-sub{font-size:14px; line-height:20px; color:var(--text-secondary); margin-bottom:var(--sp-600); max-width:600px;}
+  .stage{display:flex; flex-wrap:wrap; gap:var(--sp-800); align-items:flex-start;}
+  .col{flex:1 1 380px; max-width:410px;}
+  .state-label{font-size:11px; line-height:16px; letter-spacing:.06em; text-transform:uppercase;
+    color:var(--text-tertiary); font-weight:700; margin-bottom:var(--sp-200);}
+  .device{max-width:410px; background:var(--surface-secondary); border:var(--b-25) solid var(--border-primary);
+    border-radius:var(--r-400); padding:var(--sp-400); box-shadow:var(--shadow-sm);}
+
+  /* header enxuto do produto */
+  .prod{display:flex; align-items:center; gap:var(--sp-300); margin-bottom:var(--sp-400);}
+  .prod .thumb{width:56px; height:56px; border-radius:var(--r-200); object-fit:cover; flex:none; background:var(--surface-tertiary);}
+  .prod .pname{font-family:var(--font-title); font-weight:600; font-size:16px; line-height:20px;}
+  .prod .pmeta{font-size:13px; line-height:18px; color:var(--text-tertiary); margin-top:2px;}
+
+  /* barra de CEP (peça 02 · dir. barra progressiva) */
+  .bar{background:var(--surface-primary); border:var(--b-25) solid var(--border-primary);
+    border-radius:var(--r-300); padding:var(--sp-300) var(--sp-400); margin-bottom:var(--sp-400);}
+  .bar-row{display:flex; align-items:center; gap:var(--sp-300);}
+  .bar .pin{font-size:18px; flex:none;}
+  .bar .input{flex:1; height:44px; padding:0 var(--sp-300); border-radius:var(--r-200);
+    border:var(--b-25) solid var(--border-input); background:var(--surface-primary);
+    font-family:var(--font-body); font-size:15px; color:var(--text-primary);}
+  .bar .input::placeholder{color:var(--text-tertiary);}
+  .bar .cta-sm{border:0; background:var(--btn-enabled); color:var(--btn-text); font-weight:700;
+    font-size:14px; height:44px; min-width:44px; padding:0 var(--sp-400); border-radius:var(--r-200); cursor:pointer;}
+  .bar .cta-sm:disabled{background:var(--btn-disabled); color:var(--btn-text-disabled);}
+  .bar-confirm{display:flex; align-items:center; gap:var(--sp-300);}
+  .bar-confirm .grow{flex:1;}
+  .bar .lead{font-size:12px; line-height:16px; color:var(--text-tertiary);}
+  .bar .dest{font-size:15px; line-height:20px; font-weight:700;}
+  .check{color:var(--green-700); flex:none; font-size:18px;}
+  .link{color:var(--text-primary); font-weight:700; text-decoration:underline; text-underline-offset:2px; cursor:pointer; font-size:14px; flex:none;
+    min-height:44px; display:inline-flex; align-items:center; padding:0 var(--sp-100);}
+
+  /* rótulo de ordenação */
+  .sortline{display:flex; align-items:center; justify-content:space-between; margin-bottom:var(--sp-300);}
+  .sortline .n{font-size:14px; line-height:18px; font-weight:700; color:var(--text-secondary);}
+  .sortline .by{font-size:13px; line-height:18px; color:var(--text-tertiary);}
+
+  /* card de canal (peça 01b) */
+  .chan{width:40px; height:40px; border-radius:var(--r-200); flex:none;
+    background:var(--surface-primary); border:var(--b-25) solid var(--border-primary);
+    padding:var(--sp-150); display:inline-flex; align-items:center; justify-content:center; overflow:hidden;}
+  .chan img{width:100%; height:100%; object-fit:contain; display:block;}
+  .card{background:var(--surface-primary); border:var(--b-25) solid var(--border-primary);
+    border-radius:var(--r-300); padding:var(--sp-400); margin-bottom:var(--sp-300);}
+  .card:last-child{margin-bottom:0;}
+  .card.best{border-color:var(--green-600); background:linear-gradient(180deg,var(--green-100) 0%, var(--surface-primary) 44%);}
+  .head{display:flex; align-items:center; gap:var(--sp-300); margin-bottom:var(--sp-300);}
+  .chan-name{font-weight:700; font-size:16px; line-height:20px; flex:1;}
+  .badge-best{display:inline-flex; align-items:center; gap:var(--sp-100); background:var(--green-100); color:var(--green-800);
+    border:var(--b-25) solid var(--green-200); font-size:12px; font-weight:700; line-height:16px; padding:2px var(--sp-200); border-radius:var(--r-full);}
+  .body{display:flex; align-items:flex-end; justify-content:space-between; gap:var(--sp-300);}
+  .val-label{font-size:12px; line-height:16px; color:var(--text-tertiary); text-transform:uppercase; letter-spacing:.04em;}
+  .val{font-family:var(--font-title); font-weight:700; font-size:28px; line-height:32px; margin:2px 0 var(--sp-100);}
+  .break{font-size:13px; line-height:18px; color:var(--text-tertiary);}
+  .break.pending{color:var(--text-tertiary); font-style:italic;}
+  .cta{border:0; cursor:pointer; background:var(--btn-enabled); color:var(--btn-text);
+    font-family:var(--font-body); font-weight:700; font-size:15px; line-height:20px;
+    padding:var(--sp-300) var(--sp-500); border-radius:var(--r-200); flex:none; align-self:center;}
+</style>
+</head>
+<body>
+  <div class="page-title">Peça 03 — Lista + ordenação por menor custo-benefício</div>
+  <div class="page-sub">A composição: barra de CEP (progressiva) + a lista de cards. Dois momentos. Note o valor do comparador nos dados: <b>Ybera.com tem o menor preço, mas Shopee tem o menor total com frete</b> — a ordem muda depois do CEP. Números ilustrativos. Tokens KZ + logos.</div>
+
+  <div class="stage">
+
+    <!-- ANTES DO CEP -->
+    <div class="col">
+      <div class="state-label">Antes do CEP — ordem provisória por preço</div>
+      <div class="device">
+        <div class="prod">
+          <img class="thumb" src="assets/produto-hero.jpg" alt="" onerror="this.style.display='none'">
+          <div>
+            <div class="pname">Realinhamento Térmico 1L</div>
+            <div class="pmeta">Ybera Fashion · comparando 3 canais</div>
+          </div>
+        </div>
+
+        <div class="bar">
+          <div class="bar-row">
+            <span class="pin">📍</span>
+            <input class="input" inputmode="numeric" placeholder="Digite seu CEP p/ ver o frete">
+            <button class="cta-sm" disabled>OK</button>
+          </div>
+        </div>
+
+        <div class="sortline">
+          <span class="n">3 canais</span>
+          <span class="by">ordenado por preço</span>
+        </div>
+
+        <div class="card">
+          <div class="head"><span class="chan"><img src="assets/ybera.svg" alt="Ybera.com"></span><span class="chan-name">Ybera.com</span></div>
+          <div class="body">
+            <div>
+              <div class="val-label">Preço</div>
+              <div class="val">R$ 175,90</div>
+              <div class="break pending">+ frete · informe o CEP</div>
+            </div>
+            <button class="cta">Comprar</button>
+          </div>
+        </div>
+        <div class="card">
+          <div class="head"><span class="chan"><img src="assets/Shopee.svg" alt="Shopee"></span><span class="chan-name">Shopee</span></div>
+          <div class="body">
+            <div>
+              <div class="val-label">Preço</div>
+              <div class="val">R$ 179,90</div>
+              <div class="break pending">+ frete · informe o CEP</div>
+            </div>
+            <button class="cta">Comprar</button>
+          </div>
+        </div>
+        <div class="card">
+          <div class="head"><span class="chan"><img src="assets/tiktok.svg" alt="TikTok Shop"></span><span class="chan-name">TikTok Shop</span></div>
+          <div class="body">
+            <div>
+              <div class="val-label">Preço</div>
+              <div class="val">R$ 184,90</div>
+              <div class="break pending">+ frete · informe o CEP</div>
+            </div>
+            <button class="cta">Comprar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- DEPOIS DO CEP -->
+    <div class="col">
+      <div class="state-label">Depois do CEP — ordem final por total com frete</div>
+      <div class="device">
+        <div class="prod">
+          <img class="thumb" src="assets/produto-hero.jpg" alt="" onerror="this.style.display='none'">
+          <div>
+            <div class="pname">Realinhamento Térmico 1L</div>
+            <div class="pmeta">Ybera Fashion · comparando 3 canais</div>
+          </div>
+        </div>
+
+        <div class="bar">
+          <div class="bar-confirm">
+            <span class="check">✓</span>
+            <div class="grow">
+              <div class="lead">Entregar em</div>
+              <div class="dest">01310-100 · São Paulo, SP</div>
+            </div>
+            <span class="link">Alterar</span>
+          </div>
+        </div>
+
+        <div class="sortline">
+          <span class="n">3 canais</span>
+          <span class="by">ordenado por menor total</span>
+        </div>
+
+        <div class="card best">
+          <div class="head"><span class="chan"><img src="assets/Shopee.svg" alt="Shopee"></span><span class="chan-name">Shopee</span><span class="badge-best">✓ Melhor custo</span></div>
+          <div class="body">
+            <div>
+              <div class="val-label">Total com frete</div>
+              <div class="val">R$ 199,80</div>
+              <div class="break">R$ 179,90 + frete R$ 19,90</div>
+            </div>
+            <button class="cta">Comprar</button>
+          </div>
+        </div>
+        <div class="card">
+          <div class="head"><span class="chan"><img src="assets/tiktok.svg" alt="TikTok Shop"></span><span class="chan-name">TikTok Shop</span></div>
+          <div class="body">
+            <div>
+              <div class="val-label">Total com frete</div>
+              <div class="val">R$ 206,90</div>
+              <div class="break">R$ 184,90 + frete R$ 22,00</div>
+            </div>
+            <button class="cta">Comprar</button>
+          </div>
+        </div>
+        <div class="card">
+          <div class="head"><span class="chan"><img src="assets/ybera.svg" alt="Ybera.com"></span><span class="chan-name">Ybera.com</span></div>
+          <div class="body">
+            <div>
+              <div class="val-label">Total com frete</div>
+              <div class="val">R$ 214,80</div>
+              <div class="break">R$ 175,90 + frete R$ 38,90</div>
+            </div>
+            <button class="cta">Comprar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</body>
+</html>

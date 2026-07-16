@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Peça 05 — Estados de exceção · comparador-publico</title>
+<style>
+  /* GUARDRAIL: valores = tokens do KZ Design System. Exceção: logos (assets/). */
+  :root{
+    --neutral-50:#FFFFFF; --neutral-100:#FAF9FC; --neutral-200:#ECEBF0; --neutral-300:#E2E1E5;
+    --neutral-400:#C9C8CC; --neutral-500:#B0AFB2; --neutral-600:#6C6B6E; --neutral-700:#505052; --neutral-900:#1E1E1F;
+    --green-700:#33922A; --amber-600:#D97706; --amber-100:#FEF3C7;
+    --bg-primary:#ECEBF0; --surface-primary:#FFFFFF; --surface-secondary:#FAF9FC; --surface-tertiary:#ECEBF0;
+    --text-primary:#1E1E1F; --text-secondary:#505052; --text-tertiary:#6C6B6E;
+    --border-primary:#E2E1E5; --border-input:#B0AFB2;
+    --btn-enabled:#1E1E1F; --btn-text:#FFFFFF;
+    --sp-100:4px; --sp-150:6px; --sp-200:8px; --sp-300:12px; --sp-400:16px; --sp-500:20px; --sp-600:24px; --sp-800:32px; --sp-1000:40px;
+    --r-200:8px; --r-300:12px; --r-400:16px; --r-full:9999px;
+    --b-25:1px; --shadow-sm:0 0 8px rgba(5,5,5,.10);
+    --font-title:'Syne', system-ui, sans-serif;
+    --font-body:'Nunito Sans', system-ui, sans-serif;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{font-family:var(--font-body); background:var(--bg-primary); color:var(--text-primary);
+    padding:var(--sp-600) var(--sp-400) 80px; -webkit-font-smoothing:antialiased;}
+  .page-title{font-family:var(--font-title); font-size:24px; line-height:32px; font-weight:600; margin-bottom:var(--sp-200);}
+  .page-sub{font-size:14px; line-height:20px; color:var(--text-secondary); margin-bottom:var(--sp-600); max-width:600px;}
+  .stage{display:flex; flex-wrap:wrap; gap:var(--sp-800); align-items:flex-start;}
+  .col{flex:1 1 300px; max-width:340px;}
+  .state-label{font-size:11px; line-height:16px; letter-spacing:.06em; text-transform:uppercase;
+    color:var(--text-tertiary); font-weight:700; margin-bottom:var(--sp-200);}
+  .device{max-width:340px; min-height:420px; background:var(--surface-secondary); border:var(--b-25) solid var(--border-primary);
+    border-radius:var(--r-400); padding:var(--sp-400); box-shadow:var(--shadow-sm);}
+
+  .prod{display:flex; align-items:center; gap:var(--sp-300); margin-bottom:var(--sp-400);}
+  .prod .thumb{width:48px; height:48px; border-radius:var(--r-200); object-fit:cover; flex:none; background:var(--surface-tertiary);}
+  .prod .pname{font-family:var(--font-title); font-weight:600; font-size:15px; line-height:20px;}
+  .prod .pmeta{font-size:12px; line-height:16px; color:var(--text-tertiary); margin-top:2px;}
+
+  /* ——— Skeleton (loading) ——— */
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
+  .sk{background:var(--neutral-300); border-radius:var(--r-200); animation:pulse 1.2s ease-in-out infinite;}
+  .sk-bar{height:56px; border-radius:var(--r-300); margin-bottom:var(--sp-400);}
+  .sk-card{background:var(--surface-primary); border:var(--b-25) solid var(--border-primary); border-radius:var(--r-300);
+    padding:var(--sp-400); margin-bottom:var(--sp-300);}
+  .sk-row{display:flex; align-items:center; gap:var(--sp-300); margin-bottom:var(--sp-300);}
+  .sk-logo{width:40px; height:40px; border-radius:var(--r-200); flex:none;}
+  .sk-line{height:12px;}
+  .sk-total{height:26px; width:55%; margin-bottom:var(--sp-200);}
+  .sk-break{height:10px; width:70%;}
+
+  /* ——— Estado centrado (vazio / erro / link) ——— */
+  .empty{display:flex; flex-direction:column; align-items:center; text-align:center;
+    justify-content:center; min-height:360px; padding:var(--sp-400);}
+  .empty .ico{width:64px; height:64px; border-radius:var(--r-full); display:inline-flex;
+    align-items:center; justify-content:center; font-size:30px; margin-bottom:var(--sp-400);
+    background:var(--surface-tertiary);}
+  .empty .ico.warn{background:var(--amber-100);}
+  .empty h3{font-family:var(--font-title); font-weight:600; font-size:18px; line-height:24px; margin-bottom:var(--sp-200);}
+  .empty p{font-size:14px; line-height:20px; color:var(--text-secondary); margin-bottom:var(--sp-500); max-width:260px;}
+  .cta{border:0; cursor:pointer; background:var(--btn-enabled); color:var(--btn-text);
+    font-family:var(--font-body); font-weight:700; font-size:15px; line-height:20px;
+    padding:var(--sp-300) var(--sp-600); border-radius:var(--r-200);}
+  .cta.ghost{background:transparent; color:var(--text-primary); text-decoration:underline; text-underline-offset:2px; padding:var(--sp-200);}
+</style>
+</head>
+<body>
+  <div class="page-title">Peça 05 — Estados de exceção</div>
+  <div class="page-sub">Os quatro caminhos que não são o feliz. Regra: nunca parecer "quebrado", nunca expor erro técnico ao cliente. Loading = skeleton leve (mobile-first). Vazio ≠ link inválido — casos distintos, mensagens distintas. Tokens KZ.</div>
+
+  <div class="stage">
+
+    <!-- LOADING -->
+    <div class="col">
+      <div class="state-label">Loading — skeleton</div>
+      <div class="device">
+        <div class="prod">
+          <img class="thumb" src="assets/produto-hero.jpg" alt="" onerror="this.style.display='none'">
+          <div>
+            <div class="pname">Realinhamento Térmico 1L</div>
+            <div class="pmeta">Buscando as melhores ofertas…</div>
+          </div>
+        </div>
+        <div class="sk sk-bar"></div>
+        <div class="sk-card">
+          <div class="sk-row"><div class="sk sk-logo"></div><div class="sk sk-line" style="width:40%;"></div></div>
+          <div class="sk sk-total"></div><div class="sk sk-break"></div>
+        </div>
+        <div class="sk-card">
+          <div class="sk-row"><div class="sk sk-logo"></div><div class="sk sk-line" style="width:50%;"></div></div>
+          <div class="sk sk-total"></div><div class="sk sk-break"></div>
+        </div>
+        <div class="sk-card">
+          <div class="sk-row"><div class="sk sk-logo"></div><div class="sk sk-line" style="width:35%;"></div></div>
+          <div class="sk sk-total"></div><div class="sk sk-break"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- VAZIO -->
+    <div class="col">
+      <div class="state-label">Vazio — nenhum canal disponível</div>
+      <div class="device">
+        <div class="empty">
+          <span class="ico">🛍️</span>
+          <h3>Produto indisponível no momento</h3>
+          <p>Este produto não está à venda nos canais agora. Tente novamente mais tarde.</p>
+          <button class="cta">Atualizar</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ERRO DE CARGA -->
+    <div class="col">
+      <div class="state-label">Erro de carga — falha técnica</div>
+      <div class="device">
+        <div class="empty">
+          <span class="ico warn">⚠️</span>
+          <h3>Não foi possível carregar</h3>
+          <p>Algo deu errado ao buscar as ofertas. Verifique sua conexão e tente de novo.</p>
+          <button class="cta">Tentar de novo</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- LINK INVÁLIDO / EXPIRADO -->
+    <div class="col">
+      <div class="state-label">Link inválido / expirado</div>
+      <div class="device">
+        <div class="empty">
+          <span class="ico">🔗</span>
+          <h3>Este link não está mais ativo</h3>
+          <p>O link que você abriu expirou ou não existe mais. Peça um novo a quem te indicou.</p>
+          <button class="cta ghost">Ir para a Ybera.com</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</body>
+</html>
