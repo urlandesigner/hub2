@@ -357,11 +357,11 @@
   ioFloat.observe(hero);
 })();
 const CANAIS = [
-  {id:'shopee', canal:'Shopee', prep:'na', tag:'Loja oficial', logo:'assets/Shopee.svg',
+  {id:'shopee', canal:'Shopee', prep:'na', tag:'Canal verificado', logo:'assets/Shopee.svg',
    preco:175.90, frete:19.90, prazo:'5–9 dias úteis', parc:'até 12x com juros', link:'#demo-shopee'},
-  {id:'ybera', canal:'Ybera.com', prep:'na', tag:'Canal oficial Ybera', logo:'assets/ybera.svg',
+  {id:'ybera', canal:'Ybera.com', prep:'na', tag:'Loja oficial', logo:'assets/ybera.svg',
    preco:189.90, frete:0, prazo:'2–4 dias úteis', parc:'até 6x sem juros', link:'https://www.ybera.com/'},
-  {id:'tiktok', canal:'TikTok Shop', prep:'no', tag:'Loja oficial', logo:'assets/tiktok.svg',
+  {id:'tiktok', canal:'TikTok Shop', prep:'no', tag:'Canal verificado', logo:'assets/tiktok.svg',
    preco:184.90, frete:15.00, prazo:'6–10 dias úteis', parc:'até 6x sem juros', link:'#demo-tiktok'}
 ];
 const fmt = v => 'R$ ' + v.toFixed(2).replace('.', ',');
@@ -400,7 +400,7 @@ function card(c, best, i){
     <a class="btn-buy" href="${c.link}" data-canal="${c.id}">Comprar ${c.prep} ${c.canal} <span aria-hidden="true">→</span></a>`;
   return `<article class="card ${best?'best':''}" data-canal="${c.id}">
     ${best
-      ? `<div class="card-cap">Melhor oferta</div><div class="card-inner">${body}</div>`
+      ? `<div class="card-cap">⭐ Melhor oferta</div><div class="card-inner">${body}</div>`
       : body}
   </article>`;
 }

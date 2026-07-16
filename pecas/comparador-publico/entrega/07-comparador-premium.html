@@ -91,8 +91,8 @@
     transition:transform var(--dpress) var(--ease),background-color var(--dui) var(--ease)}
   .btn-anchor:active{transform:scale(.97)}
   @media(hover:hover){.btn-anchor:hover{background:var(--n-200)}}
-  .desde .l{font-size:11px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--on-dark-3)}
-  .desde .v{font-family:var(--display);font-weight:600;font-size:28px;line-height:36px}
+  .desde .l{font-size:10px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--on-dark-3);opacity:.8}
+  .desde .v{font-family:var(--display);font-weight:600;font-size:22px;line-height:28px}
   .hero-fig .frame{position:relative;border-radius:var(--r4);aspect-ratio:1/1;overflow:hidden;box-shadow:0 24px 64px rgba(5,5,5,.5);
     transform:rotateX(var(--tiltx,0deg)) rotateY(var(--tilty,0deg));transition:transform .15s ease-out}
   .hero-fig .frame img{width:100%;height:100%;object-fit:cover}
@@ -149,9 +149,11 @@
     transition:opacity 300ms var(--ease),transform 240ms var(--ease),box-shadow var(--dui) var(--ease)}
   .card.in{opacity:1;transform:translateY(0)}
   @media(hover:hover){.card.in:hover{transform:translateY(-4px);box-shadow:0 16px 40px rgba(30,30,31,.10)}}
-  .card.best{border:2px solid var(--n-900)}
-  .badge-best{position:absolute;top:-13px;right:var(--s6);background:var(--club-600);color:#fff;white-space:nowrap;
-    font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;border-radius:var(--rf);padding:var(--s1) var(--s4)}
+  .card.best{background:var(--club-600);border:0;padding:0 4px 4px;box-shadow:0 12px 32px -12px rgba(237,26,87,.22)}
+  @media(hover:hover){.card.best.in:hover{box-shadow:0 16px 40px -12px rgba(237,26,87,.30)}}
+  .card-cap{color:#fff;text-align:center;font-size:12px;font-weight:700;letter-spacing:.1em;
+    text-transform:uppercase;padding:var(--s2) 0}
+  .card-inner{background:var(--surface);border-radius:var(--r3);padding:var(--s6)}
   .destaque-slot:not(:empty){margin-bottom:var(--s4)}
   .chip-d{display:inline-flex;align-items:center;font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;
     color:var(--club-700);background:var(--club-50);border:1px solid var(--club-100);border-radius:var(--rf);padding:var(--s1) var(--s3)}
@@ -168,8 +170,8 @@
   .div{border:0;border-top:1px solid var(--n-200);margin:var(--s3) 0}
   .total{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:var(--s5)}
   .total .l{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--text-3)}
+  .total .l.aprazo{font-size:14px;font-weight:600;letter-spacing:normal;text-transform:none}
   .total .v{font-family:var(--display);font-weight:600;font-size:30px;line-height:38px;text-align:left}
-  .total .v small{display:block;font-family:var(--body);font-size:12px;font-weight:600;color:var(--text-3);line-height:1.4}
   .btn-buy{width:100%;display:inline-flex;justify-content:center;align-items:center;gap:var(--s2);font-family:var(--body);
     font-size:16px;font-weight:700;color:#fff;background:var(--btn);border:0;border-radius:var(--rf);padding:var(--s4) var(--s5);
     min-height:48px;cursor:pointer;transition:transform var(--dpress) var(--ease),background-color var(--dui) var(--ease)}
@@ -188,6 +190,23 @@
   .foot-links a{font-size:13px;font-weight:600;color:var(--on-dark-3);text-decoration:none;min-height:44px;display:inline-flex;align-items:center}
   @media(hover:hover){.foot-links a:hover{color:var(--on-dark)}}
 
+  /* ============ MODAL ============ */
+  .modal-overlay{position:fixed;inset:0;z-index:60;display:flex;align-items:center;justify-content:center;
+    background:rgba(5,5,5,.6);backdrop-filter:blur(2px);padding:var(--s5);
+    opacity:0;transition:opacity var(--dui) var(--ease)}
+  .modal-overlay.show{opacity:1}
+  .modal-overlay[hidden]{display:none}
+  .modal{position:relative;background:var(--surface);color:var(--text);border-radius:var(--r4);max-width:480px;width:100%;
+    max-height:min(80vh,560px);overflow-y:auto;padding:var(--s8) var(--s6) var(--s6);box-shadow:0 24px 64px rgba(5,5,5,.35);
+    transform:translateY(12px) scale(.98);transition:transform var(--dui) var(--ease)}
+  .modal-overlay.show .modal{transform:translateY(0) scale(1)}
+  .modal-close{position:absolute;top:var(--s4);right:var(--s4);width:36px;height:36px;display:grid;place-items:center;
+    background:var(--n-100);border:0;border-radius:var(--rf);color:var(--text-2);cursor:pointer;
+    transition:background-color var(--dui) var(--ease)}
+  @media(hover:hover){.modal-close:hover{background:var(--n-200)}}
+  .modal-title{font-family:var(--display);font-weight:600;font-size:22px;margin-bottom:var(--s4)}
+  .modal-body{font-size:15px;line-height:1.6;color:var(--text-2)}
+
   /* ============ MOTION ============ */
   .reveal{opacity:0;transform:translateY(12px);animation:rv .5s var(--ease) forwards}
   .d1{animation-delay:70ms}.d2{animation-delay:140ms}.d3{animation-delay:210ms}
@@ -196,6 +215,23 @@
   .cep-form input:focus-visible{outline:none}
   .cep-form:focus-within{outline:2px solid var(--club-500);outline-offset:3px;border-radius:var(--rf)}
   @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.reveal{animation:none;opacity:1;transform:none}.card{opacity:1;transform:none}.card,.btn-buy,.btn-anchor{transition:none}}
+
+  /* ============ AJUSTES MOBILE (não afeta ≥1024px) ============ */
+  @media(max-width:600px){
+    /* o chip flutuante vira só um círculo sem rótulo e sobrepõe os preços dos cards */
+    .float-produto{display:none}
+    /* ritmo vertical: no mobile 80px de padding deixava um vão morto grande antes do rodapé */
+    .comp{padding-top:var(--s12);padding-bottom:var(--s12)}
+    .sec-head{margin-bottom:var(--s6)}
+    .grid{margin-top:var(--s6)}
+    /* aproxima o disclaimer e o rodapé do conteúdo, sem o buraco branco */
+    /* ícone inline com o texto (não empilhado); a frase quebra naturalmente mas o escudo fica colado nela */
+    .comp-foot{display:block;text-align:center;margin-top:var(--s6)}
+    .comp-foot svg{display:inline;vertical-align:middle;margin-right:var(--s2)}
+    .foot-in{padding:var(--s8) var(--s5)}
+    /* links do rodapé em coluna centralizada, sem quebra 3+1 */
+    .foot-links{flex-direction:column;gap:var(--s2)}
+  }
   [hidden]{display:none!important}
 </style>
 </head>
@@ -217,11 +253,11 @@
     </div>
     <div class="hero-grid">
       <div>
-        <p class="eyebrow reveal">Oferta oficial Ybera</p>
-        <h1 class="reveal d1">A melhor oferta do <em>Óleo de Mirra Reparador 90ml</em> num só&nbsp;lugar.</h1>
-        <p class="lead reveal d1">Compare o mesmo produto entre os canais oficiais e&nbsp;compre onde for melhor.</p>
+        <p class="eyebrow reveal">Canais oficiais Ybera</p>
+        <h1 class="reveal d1">A melhor oferta do <em>Óleo de Mirra Reparador 90ml</em><br>num só&nbsp;lugar.</h1>
+        <p class="lead reveal d1">Compare preço, frete e prazo entre os canais oficiais e escolha a melhor oferta para&nbsp;você.</p>
         <div class="hero-cta reveal d2">
-          <a class="btn-anchor" href="#comparador">Comparar canais <span aria-hidden="true">↓</span></a>
+          <a class="btn-anchor" href="#comparador">Encontrar melhor oferta <span aria-hidden="true">→</span></a>
           <div class="desde"><div class="l">A partir de</div><div class="v" id="hero-preco">R$ 175,90</div></div>
         </div>
       </div>
@@ -267,16 +303,26 @@
 <footer>
   <div class="foot-in">
     <div class="wordmark"><img src="assets/logo-black.svg" alt="Ybera" width="83" height="30"></div>
-    <p>Você navega sem cadastro — nenhum dado pessoal é coletado nesta página. O CEP, quando informado, não é armazenado.</p>
+    <p>Fique tranquilo: não coletamos nada por aqui. Na loja do canal escolhido, valem as regras daquele site.</p>
     <ul class="foot-links">
-      <li><a href="#">Sobre</a></li>
-      <li><a href="#">Parceiros</a></li>
-      <li><a href="#">Política de privacidade</a></li>
-      <li><a href="#">Termos</a></li>
+      <li><a href="#" data-modal="sobre">Sobre</a></li>
+      <li><a href="#" data-modal="parceiros">Parceiros</a></li>
+      <li><a href="#" data-modal="privacidade">Política de privacidade</a></li>
+      <li><a href="#" data-modal="termos">Termos</a></li>
     </ul>
     <p>© 2026 Ybera Group</p>
   </div>
 </footer>
+
+<div class="modal-overlay" id="modal-overlay" hidden>
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+    <button type="button" class="modal-close" id="modal-close" aria-label="Fechar">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+    <h2 class="modal-title" id="modal-title"></h2>
+    <div class="modal-body" id="modal-body"></div>
+  </div>
+</div>
 
 <script>
 // tilt 3D + brilho na foto do produto (efeito portado do comet-card, Aceternity)
@@ -311,11 +357,11 @@
   ioFloat.observe(hero);
 })();
 const CANAIS = [
-  {id:'shopee', canal:'Shopee', prep:'na', tag:'Loja oficial', logo:'assets/Shopee.svg',
+  {id:'shopee', canal:'Shopee', prep:'na', tag:'Canal verificado', logo:'assets/Shopee.svg',
    preco:175.90, frete:19.90, prazo:'5–9 dias úteis', parc:'até 12x com juros', link:'#demo-shopee'},
-  {id:'ybera', canal:'Ybera.com', prep:'na', tag:'Canal oficial Ybera', logo:'assets/ybera.svg',
+  {id:'ybera', canal:'Ybera.com', prep:'na', tag:'Loja oficial', logo:'assets/ybera.svg',
    preco:189.90, frete:0, prazo:'2–4 dias úteis', parc:'até 6x sem juros', link:'https://www.ybera.com/'},
-  {id:'tiktok', canal:'TikTok Shop', prep:'no', tag:'Loja oficial', logo:'assets/tiktok.svg',
+  {id:'tiktok', canal:'TikTok Shop', prep:'no', tag:'Canal verificado', logo:'assets/tiktok.svg',
    preco:184.90, frete:15.00, prazo:'6–10 dias úteis', parc:'até 6x sem juros', link:'#demo-tiktok'}
 ];
 const fmt = v => 'R$ ' + v.toFixed(2).replace('.', ',');
@@ -337,10 +383,10 @@ function destaque(c, lista){
 function card(c, best, i){
   const freteL = !cep ? '<dd class="pend" aria-label="ainda não calculado">—</dd>' : (c.frete===0 ? '<dd class="gratis">Grátis</dd>' : `<dd>${fmt(c.frete)}</dd>`);
   const prazoL = !cep ? '<dd class="pend" aria-label="ainda não calculado">—</dd>' : `<dd>${c.prazo}</dd>`;
-  const totalV = !cep ? `<small>a partir de</small> ${fmt(c.preco)}` : fmt(c.preco+c.frete);
+  const totalL = !cep ? 'A partir de' : 'Total';
+  const totalV = !cep ? fmt(c.preco) : fmt(c.preco+c.frete);
   const d = best ? null : destaque(c, window._ord);
-  return `<article class="card ${best?'best':''}" data-canal="${c.id}">
-    ${best?'<span class="badge-best">★ Melhor custo</span>':''}
+  const body = `
     <div class="destaque-slot">${d?`<span class="chip-d">${d}</span>`:''}</div>
     <div class="c-head"><span class="c-logo"><img src="${c.logo}" alt="" width="26" height="26"></span><div><div class="nome">${c.canal}</div><div class="tag">${c.tag}</div></div></div>
     <dl>
@@ -350,8 +396,12 @@ function card(c, best, i){
       <div class="row"><dt>Parcelamento</dt><dd>${c.parc}</dd></div>
     </dl>
     <hr class="div">
-    <div class="total"><span class="l">Total</span><span class="v">${totalV}</span></div>
-    <a class="btn-buy" href="${c.link}" data-canal="${c.id}">Comprar ${c.prep} ${c.canal} <span aria-hidden="true">→</span></a>
+    <div class="total"><span class="l${!cep?' aprazo':''}">${totalL}</span><span class="v">${totalV}</span></div>
+    <a class="btn-buy" href="${c.link}" data-canal="${c.id}">Comprar ${c.prep} ${c.canal} <span aria-hidden="true">→</span></a>`;
+  return `<article class="card ${best?'best':''}" data-canal="${c.id}">
+    ${best
+      ? `<div class="card-cap">⭐ Melhor oferta</div><div class="card-inner">${body}</div>`
+      : body}
   </article>`;
 }
 function render(lista){
@@ -379,6 +429,42 @@ form.addEventListener('submit',e=>{e.preventDefault();const d=input.value.replac
   cep=d.slice(0,5)+'-'+d.slice(5);document.getElementById('cep-val').textContent=cep;form.hidden=true;on.hidden=false;render(CANAIS);});
 document.getElementById('cep-alt').addEventListener('click',()=>{cep=null;form.hidden=false;on.hidden=true;input.focus();render(CANAIS);});
 render(CANAIS);
+
+// modal dos links do rodapé (conteúdo fictício, placeholder de exemplo)
+(function(){
+  const MODAIS = {
+    sobre:{titulo:'Sobre a Ybera',corpo:'A Ybera nasceu para simplificar o cuidado com o cabelo com produtos formulados à base de ingredientes naturais. Este comparador ajuda você a encontrar o mesmo produto oficial no canal com a melhor condição, sem sair da experiência Ybera.'},
+    parceiros:{titulo:'Canais parceiros',corpo:'Este comparador reúne apenas canais oficiais autorizados a vender produtos Ybera, entre marketplaces parceiros e a loja própria Ybera.com. Revendedores não autorizados não são exibidos aqui.'},
+    privacidade:{titulo:'Política de privacidade',corpo:'Texto de exemplo para fins de prototipagem. Aqui entraria a política completa de privacidade da Ybera, explicando como os dados são tratados em cada canal de venda e quais direitos você tem sobre suas informações.'},
+    termos:{titulo:'Termos de uso',corpo:'Texto de exemplo para fins de prototipagem. Aqui entrariam os termos de uso do comparador, incluindo regras de utilização do site, isenção de responsabilidade sobre preços de terceiros e atualização de conteúdo.'}
+  };
+  const overlay = document.getElementById('modal-overlay');
+  const modalTitle = document.getElementById('modal-title');
+  const modalBody = document.getElementById('modal-body');
+  let lastFocus = null;
+  function abrir(chave){
+    const d = MODAIS[chave];
+    if(!d) return;
+    modalTitle.textContent = d.titulo;
+    modalBody.textContent = d.corpo;
+    lastFocus = document.activeElement;
+    overlay.hidden = false;
+    requestAnimationFrame(()=>overlay.classList.add('show'));
+    document.getElementById('modal-close').focus();
+    document.addEventListener('keydown', onKeydown);
+  }
+  function fechar(){
+    overlay.classList.remove('show');
+    document.removeEventListener('keydown', onKeydown);
+    setTimeout(()=>{ overlay.hidden = true; lastFocus?.focus(); }, 240);
+  }
+  function onKeydown(e){ if(e.key === 'Escape') fechar(); }
+  document.querySelectorAll('.foot-links a[data-modal]').forEach(a=>{
+    a.addEventListener('click', e=>{ e.preventDefault(); abrir(a.dataset.modal); });
+  });
+  document.getElementById('modal-close').addEventListener('click', fechar);
+  overlay.addEventListener('click', e=>{ if(e.target === overlay) fechar(); });
+})();
 </script>
 </body>
 </html>

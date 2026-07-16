@@ -1,8 +1,10 @@
 # Handoff — Comparador público (HUB Ybera)
 
-**Demanda:** `comparador-publico` · **Ciclo:** 1 · **Data:** 2026-07-14
+**Demanda:** `comparador-publico` · **Ciclo:** 1 · **Data:** 2026-07-14 (re-sincronizado em 2026-07-16)
 **Carimbo:** 🟡 **DEMO / protótipo de handoff** — NÃO é código de produção.
 **Veredicto:** aprovado no portão de qualidade (Fase 03). Ciclo passou por uma **passada de craft** (direção estética editorial premium) após comparação com o processo v4.
+
+> **Nota de re-sincronização (2026-07-16):** este pacote havia ficado desatualizado — várias rodadas de refino no arquivo de trabalho (`07-comparador-premium.html`) nunca tinham sido replicadas aqui, apesar do rastro da spec registrar "sincronizado em entrega/" a cada rodada. `07-comparador-premium.html`, `spec-comparador-publico.md` e este HANDOFF foram atualizados para refletir o estado atual. Ver `## Rastro` da spec para o histórico completo do que mudou desde 2026-07-14.
 
 ## ⭐ Entregável principal: `07-comparador-premium.html`
 Versão premium (editorial + calor Ybera + 4 dimensões de comparação + chips honestos + motion),
@@ -11,7 +13,8 @@ aprovada como o entregável deste ciclo. As peças `01b`–`06` são o históric
 
 **Direção Estética** (registrada na spec): editorial premium quente — hero escuro, headline Syne
 em escala, chip da embaixadora, faixa de confiança, cards ricos (preço/frete/prazo/parcelamento),
-badge "Melhor custo" + chips de destaque derivados só do dado exibido, gradiente club/50, motion.
+card destacado com moldura preta (`--n-900`) + badge "⭐ Melhor oferta" + subtítulo "Canal
+verificado" + chips de destaque derivados só do dado exibido, gradiente club/50, motion.
 
 ### Estados de exceção — COMPLETOS no skin premium
 - `07-comparador-premium.html`: sucesso, degradado (1/2/3 canais), erro de CEP.
@@ -54,14 +57,15 @@ Abrir via servidor local (as peças usam `assets/`):
   o torna comum. Sem comparação → sem badge, card ganha peso, CTA full-width.
 - **Rótulo do 3º canal = "Ybera.com"** (Wake é só a plataforma; é o nome que o cliente reconhece).
 - **Sem branding HUB explícito** (H-UX-05): experiência transparente.
-- **Menor preço ≠ menor total**: os dados de exemplo provam o valor — Ybera.com tem o menor
-  preço mas o maior total com frete; Shopee vence no custo-benefício.
+- **Menor preço ≠ menor total**: os dados de exemplo provam o valor — Shopee tem o menor
+  preço de produto, mas o frete grátis da Ybera.com faz ela vencer no total (custo-benefício).
 
 ## Guardrails visuais
 
 Todos os valores de cor, espaçamento, raio e tipografia vêm do **KZ Design System**
 (`design-system/tokens.json`). Fontes: Syne (títulos) + Nunito Sans (texto).
-Contraste do badge corrigido para green-800 (5,85:1, WCAG AA). Alvos de toque ≥ 44×44.
+Card destacado usa `--n-900` (`#1E1E1F`) como moldura/CTA — texto branco sobre preto,
+contraste ≈17:1 (WCAG AAA). Alvos de toque ≥ 44×44.
 
 ## Pendências carimbadas (não bloqueiam o handoff de design)
 
