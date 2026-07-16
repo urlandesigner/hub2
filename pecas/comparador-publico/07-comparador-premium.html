@@ -399,7 +399,7 @@ function card(c, best, i){
     <a class="btn-buy" href="${c.link}" data-canal="${c.id}">Comprar ${c.prep} ${c.canal} <span aria-hidden="true">→</span></a>`;
   return `<article class="card ${best?'best':''}" data-canal="${c.id}">
     ${best
-      ? `<div class="card-cap">Melhor custo</div><div class="card-inner">${body}</div>`
+      ? `<div class="card-cap">Melhor oferta</div><div class="card-inner">${body}</div>`
       : body}
   </article>`;
 }
