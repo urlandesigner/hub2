@@ -23,6 +23,8 @@
     --club-500:#ED1A57; --club-600:#C70F43; --club-700:#980B38;
     /* green feedback */
     --green-100:#E6F6E5; --green-700:#33922A; --green-800:#2B6A25;
+    /* amber feedback */
+    --amber-400:#FBBF24;
     /* semantic */
     --surface:var(--n-50); --surface-2:var(--n-100); --brand-dark:var(--n-900);
     --text:var(--n-900); --text-2:var(--n-700); --text-3:var(--n-600);
@@ -161,7 +163,10 @@
   .c-logo{width:44px;height:44px;border-radius:var(--r3);background:var(--n-100);border:1px solid var(--n-200);display:grid;place-items:center;flex:none}
   .c-logo img{width:26px;height:26px;object-fit:contain}
   .c-head .nome{font-family:var(--display);font-weight:600;font-size:16px;line-height:22px}
-  .c-head .tag{font-size:12px;font-weight:600;color:var(--text-3)}
+  .tag-line{display:flex;align-items:center;gap:4px;font-size:12px;font-weight:600;color:var(--text-3)}
+  .tag-line .ic-check{width:12px;height:12px;flex:none;color:var(--club-500)}
+  .tag-line .ic-star{width:11px;height:11px;flex:none;color:var(--amber-400);margin-left:2px}
+  .tag-line .tag-rating{font-weight:700;color:var(--text-2)}
   .row{display:flex;justify-content:space-between;align-items:baseline;padding:var(--s2) 0;font-size:14px}
   .row dt{color:var(--text-3);font-weight:600}
   .row dd{font-weight:700}
@@ -357,14 +362,20 @@
   ioFloat.observe(hero);
 })();
 const CANAIS = [
-  {id:'shopee', canal:'Shopee', prep:'na', tag:'Canal verificado', logo:'assets/Shopee.svg',
+  {id:'shopee', canal:'Shopee', prep:'na', tag:'Canal verificado', logo:'assets/Shopee.svg', avaliacao:4.6,
    preco:175.90, frete:19.90, prazo:'5–9 dias úteis', parc:'até 12x com juros', link:'#demo-shopee'},
-  {id:'ybera', canal:'Ybera.com', prep:'na', tag:'Loja oficial', logo:'assets/ybera.svg',
+  {id:'ybera', canal:'Ybera.com', prep:'na', tag:'Loja oficial', logo:'assets/ybera.svg', avaliacao:4.9,
    preco:189.90, frete:0, prazo:'2–4 dias úteis', parc:'até 6x sem juros', link:'https://www.ybera.com/'},
-  {id:'tiktok', canal:'TikTok Shop', prep:'no', tag:'Canal verificado', logo:'assets/tiktok.svg',
+  {id:'tiktok', canal:'TikTok Shop', prep:'no', tag:'Canal verificado', logo:'assets/tiktok.svg', avaliacao:4.4,
    preco:184.90, frete:15.00, prazo:'6–10 dias úteis', parc:'até 6x sem juros', link:'#demo-tiktok'}
 ];
 const fmt = v => 'R$ ' + v.toFixed(2).replace('.', ',');
+const CHECK_ICON = '<svg class="ic-check" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 1.5l2.24 1.36 2.6-.3 1.03 2.42 2.42 1.03-.3 2.6L21.35 11l-1.36 2.24.3 2.6-2.42 1.03-1.03 2.42-2.6-.3L12 20.5l-2.24-1.36-2.6.3-1.03-2.42-2.42-1.03.3-2.6L2.65 11l1.36-2.24-.3-2.6 2.42-1.03L7.16 2.7l2.6.3L12 1.5z"/><path d="M9 11.3l2 2 4-4.2" fill="none" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+const STAR_ICON = '<svg class="ic-star" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path d="M10 1.6l2.47 5.7 6.2.55-4.7 4.12 1.4 6.08L10 14.9l-5.37 3.15 1.4-6.08L1.33 7.85l6.2-.55L10 1.6z"/></svg>';
+function tagLineHtml(tag, v){
+  const vLabel = v.toFixed(1).replace('.', ',');
+  return `<div class="tag-line">${CHECK_ICON}<span class="tag-txt">${tag}</span>${STAR_ICON}<span class="tag-rating" aria-label="Avaliação ${vLabel} de 5">${vLabel}</span></div>`;
+}
 let cep = null;
 const grid = document.getElementById('grid');
 const sub = document.getElementById('sub');
@@ -388,7 +399,7 @@ function card(c, best, i){
   const d = best ? null : destaque(c, window._ord);
   const body = `
     <div class="destaque-slot">${d?`<span class="chip-d">${d}</span>`:''}</div>
-    <div class="c-head"><span class="c-logo"><img src="${c.logo}" alt="" width="26" height="26"></span><div><div class="nome">${c.canal}</div><div class="tag">${c.tag}</div></div></div>
+    <div class="c-head"><span class="c-logo"><img src="${c.logo}" alt="" width="26" height="26"></span><div><div class="nome">${c.canal}</div>${tagLineHtml(c.tag, c.avaliacao)}</div></div>
     <dl>
       <div class="row"><dt>Preço do produto</dt><dd>${fmt(c.preco)}</dd></div>
       <div class="row"><dt>Frete</dt>${freteL}</div>
